@@ -319,7 +319,7 @@ public class AnalisadorLexico {
 	public boolean verificaString(String codigos)
 	{	
 		//cria a regex para sequencia de numeros flutuantes
-		Pattern p = Pattern.compile("^([a-zA-Z])+(\\w+)");
+		Pattern p = Pattern.compile("^([a-zA-Z])+(\\w+)?");
         //verifica de acordo com a regex criada a string 'strCodigo'
         Matcher m = p.matcher(codigos);		
 		
