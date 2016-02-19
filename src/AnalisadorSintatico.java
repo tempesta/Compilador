@@ -84,7 +84,7 @@ public class AnalisadorSintatico {
 				if(pilha.lastElement().chave.equals("palavra_reservada"))
 				{
 					//verifica o valor do token de chave palavra reservada
-					//se for if, o token da lista na posico atual deve ter chave abre_parentese
+					//se for if, o token da lista na posico atual deve ter abre_parentese
 					if(pilha.lastElement().valor.equals("if"))
 					{		
 						//se token da posicao atual da lista de tokens for abre parentese, desempilha
@@ -94,7 +94,25 @@ public class AnalisadorSintatico {
 						}
 					}
 					
-					//
+					//se for while, o token da lista na posico atual deve ter abre_parentese
+					if(pilha.lastElement().valor.equals("while"))
+					{		
+						//se token da posicao atual da lista de tokens for abre parentese, desempilha
+						if(listaTokens.get(index).chave.equals("abre_parenteses"))
+						{
+							pilha.pop();
+						}
+					}
+					
+					//se for void, o token da lista na posico atual deve ter abre_parentese
+					if(pilha.lastElement().valor.equals("void"))
+					{		
+						//se token da posicao atual da lista de tokens for abre parentese, desempilha
+						if(listaTokens.get(index).chave.equals("abre_parenteses"))
+						{
+							pilha.pop();
+						}
+					}
 				}
 			}	
 		} catch (Exception e) {
