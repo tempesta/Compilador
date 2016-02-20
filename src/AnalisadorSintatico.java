@@ -69,9 +69,35 @@ public class AnalisadorSintatico {
 	}
 	
 	//Funcao que verifica proximo token para token do tipo identificador, retorna true(letra seguido de token relacional de valor '=') ou false
-	private boolean verificaTokenLetra(MToken pilha, MToken token)
+	private boolean verificaTokenLetra(MToken pilha, MToken token, Boolean condicional)
 	{
 		try {
+			
+			//verifica se o identificador esta dentro de alguma condicao
+			if(condicional)
+			{
+				//caso a chave do ultimo elemento da pilha seja letra
+				if(pilha.chave.equals("letra"))
+				{
+					if(token.valor.equals("<="))
+					{
+						return true;
+					}
+					if(token.valor.equals("=="))
+					{
+						return true;
+					}
+					if(token.valor.equals(">="))
+					{
+						return true;
+					}
+					if(token.valor.equals("!="))
+					{
+						return true;
+					}
+				}
+			}
+			
 			//caso a chave do ultimo elemento da pilha seja letra
 			if(pilha.chave.equals("letra"))
 			{
@@ -79,7 +105,7 @@ public class AnalisadorSintatico {
 				{
 					return true;
 				}
-				if(token.chave.equals("ponto_virgula"))
+				if(token.valor.equals(";"))
 				{
 					return true;
 				}
