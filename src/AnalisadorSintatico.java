@@ -33,17 +33,160 @@ public class AnalisadorSintatico {
 		}
 	}
 	
-	//Funcao que verifica sintaxe 'if' e 'while'
-	//Parametros: pilha -> pilha, 
-	//			  tokenAtual -> token que esta sendo verificado no metodo analiseSintatica,
-	//            listaTokens -> lista de tokens para caso seja necessario mais iteracoes,
-	//			  index -> retorna a posicao atual de leitura da lista caso seja necessario mais iteracoes
-	//retorno : pilha apos casar ou nao com proximo elemento,
-	//			
-	
-	private Stack<MToken> verificaSintaxeIFeWHILE(Stack<MToken> pilha, MToken tokenAtual, ArrayList<MToken> listaTokens, int index)
+	//Funcao que sera chamada recursivamente para analisar os tokens da lista de tokens em relacao aos objetos da pilha
+	private ObjAnaliseSintatica verificaPilhaListaDeTokens(ArrayList<MToken> listaTokens, Stack<MToken> pilha)
 	{
-		return pilha;
+		try {
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Erro ao relacionar os tokens lidos com a pilha. " + e);
+			//obj vazio
+			return new ObjAnaliseSintatica();
+		}
+	}
+	
+	//Funcao que verifica proximo token para token do tipo identificador, retorna true(identificador seguido de token letra) ou false
+	private boolean verificaTokenIdentificador(MToken pilha, MToken token)
+	{
+		try {
+			//caso a chave do ultimo elemento da pilha seja identificador
+			if(pilha.chave.equals("identificador"))
+			{
+				//verifica se a chave do token da posicao atual é nome de uma variavel(nao inicia com digito e nao contem caracter especial)
+				if(token.chave.equals("letra"))
+				{
+					//caso seja(identificador reconhecido), desempilha identificador
+					return true;
+				}
+			}	
+			return false;
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Erro ao identidicar proximo token para token tipo letra. " + e);
+			return false;
+		}
+	}
+	
+	//Funcao que verifica proximo token para token do tipo identificador, retorna true(letra seguido de token relacional de valor '=') ou false
+	private boolean verificaTokenLetra(MToken pilha, MToken token)
+	{
+		try {
+			//caso a chave do ultimo elemento da pilha seja letra
+			if(pilha.chave.equals("letra"))
+			{
+				if(token.valor.equals("="))
+				{
+					return true;
+				}
+				if(token.chave.equals("ponto_virgula"))
+				{
+					return true;
+				}
+			}
+			return false;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
+	}
+	
+	//Funcao que verifica proximo token para token do tipo palavra_reservada de valor 'if' ou 'while', retorna true(if ou while seguido de token abre parentese) ou false
+	private boolean verificaTokenIfOuWhile(MToken pilha, MToken token)
+	{
+		try {
+			//caso a chave do ultimo elemento da pilha seja if
+			if(pilha.valor.equals("if"))
+			{
+				if(token.valor.equals("("))
+				{
+					return true;
+				}
+			}
+			
+			//caso a chave do ultimo elemento da pilha seja while
+			if(token.valor.equals("while"))
+			{
+				if(token.valor.equals("("))
+				{
+					return true;
+				}
+			}
+			return false;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
+	}
+	
+	//Funcao que verifica proximo token para token do tipo palavra_reservada de valor 'else' ou 'struct', retorna true(else ou struct seguido de token abre chave) ou false
+	private boolean verificaTokenElseOuStruct(MToken pilha, MToken token)
+	{
+		try {
+			//caso a chave do ultimo elemento da pilha seja else
+			if(pilha.valor.equals("else"))
+			{
+				//caso o valor do token seja '{'
+				if(token.valor.equals("{"))
+				{
+					return true;
+				}
+			}
+			
+			//caso a chave do ultimo elemento da pilha seja struct
+			if(pilha.valor.equals("struct"))
+			{
+				//caso o valor do token seja '{'
+				if(token.valor.equals("{"))
+				{
+					return true;
+				}
+			}
+			return false;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
+	}
+	
+	//Funcao que verifica proximo token para token do tipo palavra_reservada de valor 'return', retorna true(return seguido de token letra) ou false
+	private boolean verificaTokenReturn(MToken pilha, MToken token)
+	{
+		try {
+			//caso a chave do ultimo elemento da pilha seja return
+			if(pilha.valor.equals("return"))
+			{
+				//se o proximo token apos o return for letra retorna true
+				if(token.chave.equals("letra"))
+				{
+					return true;
+				}				
+			}
+			return false;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
+	}
+	
+	//Funcao que verifica proximo token para token do tipo palavra_reservada de valor 'void', retorna true(void seguido de abre parentese) ou false
+	private boolean verificaTokenVoid(MToken pilha, MToken token)
+	{
+		try {
+			//caso a chave do ultimo elemento da pilha seja void
+			if(pilha.valor.equals("void"))
+			{
+				//se o proximo token apos o void for abre parentese retorna true
+				if(token.valor.equals("("))
+				{
+					return true;
+				}				
+			}
+			return false;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
 	}
 	
 	//Funcao que faz a analise sintatica
@@ -67,31 +210,7 @@ public class AnalisadorSintatico {
 			{
 				pilha.push(listaTokens.get(index));
 				
-				index += 1;
-				
-				//caso a chave do ultimo elemento da pilha seja identificador
-				if(pilha.lastElement().chave.equals("identificador"))
-				{
-					//verifica se a chave do token da posicao atual é nome de uma variavel(nao inicia com digito e nao contem caracter especial)
-					if(listaTokens.get(index).chave.equals("letra"))
-					{
-						//caso seja(identificador reconhecido), desempilha identificador
-						pilha.pop();
-					}
-				}				
-				
-				//caso a chave do ultimo elemento da pilha seja letra
-				if(pilha.lastElement().chave.equals("letra"))
-				{
-					switch (listaTokens.get(index).chave) {
-					case "relacional":
-					case "ponto_virgula":
-						pilha.pop();
-						break;
-					default:
-						break;
-					}
-				}
+				index += 1;	
 				
 				//caso a chave do ultimo elemento da pilha seja palavra reservada
 				if(pilha.lastElement().chave.equals("palavra_reservada"))
