@@ -1,8 +1,0 @@
-Program
-int 77abcd = 5;
-intovirm = 10;
-if(abcd <= 6){
-  abcd = abcd + 1;
-}
-
-return abcd;

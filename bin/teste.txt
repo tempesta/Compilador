@@ -1,6 +1,0 @@
-Program
-int abcd = 10;
-if(abcd <= 6){
-  abcd = abcd + 1;
-}
-return abcd;
