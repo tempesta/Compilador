@@ -33,6 +33,19 @@ public class AnalisadorSintatico {
 		}
 	}
 	
+	//Funcao que verifica sintaxe 'if' e 'while'
+	//Parametros: pilha -> pilha, 
+	//			  tokenAtual -> token que esta sendo verificado no metodo analiseSintatica,
+	//            listaTokens -> lista de tokens para caso seja necessario mais iteracoes,
+	//			  index -> retorna a posicao atual de leitura da lista caso seja necessario mais iteracoes
+	//retorno : pilha apos casar ou nao com proximo elemento,
+	//			
+	
+	private Stack<MToken> verificaSintaxeIFeWHILE(Stack<MToken> pilha, MToken tokenAtual, ArrayList<MToken> listaTokens, int index)
+	{
+		return pilha;
+	}
+	
 	//Funcao que faz a analise sintatica
 	public void analiseSintatica(ArrayList<MToken> listaTokens)
 	{
@@ -90,27 +103,67 @@ public class AnalisadorSintatico {
 						//se token da posicao atual da lista de tokens for abre parentese, desempilha
 						if(listaTokens.get(index).chave.equals("abre_parenteses"))
 						{
+							//desempilha token de chave 'palavra_reservada' e valor 'if'
 							pilha.pop();
+							
+							//empilha token de valor 'abre parenteses', que esta na posicao atual da lista de tokens
+							pilha.push(listaTokens.get(index));
 						}
 					}
 					
-					//se for while, o token da lista na posico atual deve ter abre_parentese
+					//se for while, o token da lista na posico atual deve ser abre_parentese
 					if(pilha.lastElement().valor.equals("while"))
 					{		
 						//se token da posicao atual da lista de tokens for abre parentese, desempilha
 						if(listaTokens.get(index).chave.equals("abre_parenteses"))
 						{
+							//desempilha token de chave 'palavra_reservada' e valor 'while'
 							pilha.pop();
+							
+							//empilha token de valor 'abre parenteses', que esta na posicao atual da lista de tokens
+							pilha.push(listaTokens.get(index));
 						}
 					}
 					
-					//se for void, o token da lista na posico atual deve ter abre_parentese
+					//se for void, o token da lista na posico atual deve ser abre_parentese
 					if(pilha.lastElement().valor.equals("void"))
 					{		
 						//se token da posicao atual da lista de tokens for abre parentese, desempilha
 						if(listaTokens.get(index).chave.equals("abre_parenteses"))
 						{
+							//desempilha token de chave 'palavra_reservada' e valor 'void'
 							pilha.pop();
+							
+							//empilha token de valor abre parenteses, que esta na posicao atual da lista de tokens
+							pilha.push(listaTokens.get(index));
+						}
+					}
+					
+					//se for else, o token da lista na posico atual deve ser abre_chaves
+					if(pilha.lastElement().valor.equals("else"))
+					{		
+						//se token da posicao atual da lista de tokens for abre chaves, desempilha
+						if(listaTokens.get(index).chave.equals("abre_chave"))
+						{
+							//desempilha token de chave 'palavra_reservada' e valor 'else'
+							pilha.pop();
+							
+							//empilha token de valor abre chave, que esta na posicao atual da lista de tokens
+							pilha.push(listaTokens.get(index));
+						}
+					}
+					
+					//se for struct, o token da lista na posico atual deve ser abre_chaves
+					if(pilha.lastElement().valor.equals("struct"))
+					{		
+						//se token da posicao atual da lista de tokens for abre chaves, desempilha
+						if(listaTokens.get(index).chave.equals("abre_chave"))
+						{
+							//desempilha token de chave 'palavra_reservada' e valor 'struct'
+							pilha.pop();
+							
+							//empilha token de valor abre chave, que esta na posicao atual da lista de tokens
+							pilha.push(listaTokens.get(index));
 						}
 					}
 				}
