@@ -33,23 +33,37 @@ public class AnalisadorSintatico {
 		}
 	}
 	
-	//Funcao que sera chamada recursivamente para analisar os tokens da lista de tokens em relacao aos objetos da pilha
-	private ObjAnaliseSintatica verificaPilhaListaDeTokens(ArrayList<MToken> listaTokens, Stack<MToken> pilha)
-	{
-		try {
-			
-		} catch (Exception e) {
-			// TODO: handle exception
-			System.out.println("Erro ao relacionar os tokens lidos com a pilha. " + e);
-			//obj vazio
-			return new ObjAnaliseSintatica();
-		}
-	}
+//	//Funcao que sera chamada recursivamente para analisar os tokens da lista de tokens em relacao aos objetos da pilha
+//	private ObjAnaliseSintatica verificaPilhaListaDeTokens(ArrayList<MToken> listaTokens, Stack<MToken> pilha)
+//	{
+//		try {
+//			
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			System.out.println("Erro ao relacionar os tokens lidos com a pilha. " + e);
+//			//obj vazio
+//			return new ObjAnaliseSintatica();
+//		}
+//	}
 	
 	//Funcao que verifica proximo token para token do tipo identificador, retorna true(identificador seguido de token letra) ou false
-	private boolean verificaTokenIdentificador(MToken pilha, MToken token)
+	private boolean verificaTokenIdentificador(MToken pilha, MToken token, Boolean condicional)
 	{
-		try {
+		try {			
+			//verifica se o identificador esta dentro de uma condicao
+			if(condicional)
+			{
+				//verifica se a chave do ultimo token na pilha é um identificador
+				if(pilha.chave.equals("identificador"))
+				{
+					//caso seja um identificador e esteja dentro de um loop, qualquer operador relacional diferente de '=' é valido
+					if(!token.valor.equals("="))
+					{
+						return true;
+					}
+				}
+			}
+			
 			//caso a chave do ultimo elemento da pilha seja identificador
 			if(pilha.chave.equals("identificador"))
 			{
@@ -75,10 +89,12 @@ public class AnalisadorSintatico {
 			//caso a chave do ultimo elemento da pilha seja letra
 			if(pilha.chave.equals("letra"))
 			{
+				//se a chave do ultimo token na pilha for letra, o token atual da lista deve ser um operador relacional de valor '='
 				if(token.valor.equals("="))
 				{
 					return true;
 				}
+				//ou se o token atual for ';' identifica a declaracao de uma variavel, valido tambem
 				if(token.chave.equals("ponto_virgula"))
 				{
 					return true;
@@ -98,6 +114,7 @@ public class AnalisadorSintatico {
 			//caso a chave do ultimo elemento da pilha seja if
 			if(pilha.valor.equals("if"))
 			{
+				//se o token atual da lista de token for abre parentese o inicio do if esta valido. Obs.: sera verificado o restante em outro metodo
 				if(token.valor.equals("("))
 				{
 					return true;
@@ -107,6 +124,7 @@ public class AnalisadorSintatico {
 			//caso a chave do ultimo elemento da pilha seja while
 			if(token.valor.equals("while"))
 			{
+				//se o token atual da lista de token for abre parentese o inicio do while esta valido. Obs.: sera verificado o restante em outro metodo
 				if(token.valor.equals("("))
 				{
 					return true;
@@ -183,6 +201,52 @@ public class AnalisadorSintatico {
 				}				
 			}
 			return false;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
+	}
+	
+	//Funcao que verifica proximo token para token do tipo relacional, retorna true(relacional seguido de valor(int, float, char)) ou false
+	private boolean verificaTokenRelacional(MToken pilha, MToken token)
+	{
+		try {
+			switch (pilha.valor) 
+			{
+				case "=":
+				case "!=":
+				case "==":
+					//caso a chave do ultimo elemento da pilha seja um relacional de valor '=', '!=' ou '=='
+					//se o proximo token for um valor(int, float, char) retorna true
+					if(token.chave.equals("int"))
+					{
+						return true;
+					}				
+					if(token.chave.equals("float"))
+					{
+						return true;
+					}
+					if(token.valor.equals("char"))
+					{
+						return true;
+					}
+				case "<=":
+				case ">=":
+				case "<":
+				case ">":
+					//caso a chave do ultimo elemento da pilha seja um relacional de valor '<', '>', '<=' ou '>='
+					//se o proximo token for um valor(int, float) retorna true
+					if(token.chave.equals("int"))
+					{
+						return true;
+					}				
+					if(token.chave.equals("float"))
+					{
+						return true;
+					}
+				default:
+					return false;
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			return false;
