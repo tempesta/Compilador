@@ -351,7 +351,6 @@ public class AnalisadorLexico {
 						return true;
 					}
 				}
-				return false;
 			}
 			return false;
 		} catch (Exception e) {
@@ -671,7 +670,7 @@ public class AnalisadorLexico {
 					{					
 						//primeiro verifica se o ultimo token que foi adicionado na lista de tokens é um identificador,
 						//o que diz se a proxima sequencia e nome de uma variavel
-						if(tokens.size() > 1 && tokens.get(tokens.size() - 1).chave.equals("identificadores"))
+						if(tokens.size() > 1 && tokens.get(tokens.size() - 2).chave.equals("identificadores"))
 						{
 							//verifica se a sequencia de caracter pode ser nome de uma variavel e se ja foi declarada
 							if(!verificaVariavelDeclarada(substring, alfabeto))

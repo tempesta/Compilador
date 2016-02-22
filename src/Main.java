@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 //import java.net.URL;
 import java.util.HashMap;
+import java.util.Stack;
 
 public class Main {
 
@@ -14,6 +15,9 @@ public class Main {
 			
 			//cria variavel que chamara a funcao analiseLexica da classe AnalisadorLexico
 			AnalisadorLexico lex = new AnalisadorLexico();
+			
+			//cria variavel que chamara a funcao analiseSintatica da classe AnalisadorSintatico
+			AnalisadorSintatico sintax = new AnalisadorSintatico();
 			
 			//cria a variavel que recebera o resultado da analise lexica (tokes e alfabeto atualizado)
 			ObjRetornoAnaliseLexica resultadoAnaliseLexica = new ObjRetornoAnaliseLexica();
@@ -35,6 +39,8 @@ public class Main {
 			
 			//faz a analise lexica
 			resultadoAnaliseLexica = lex.analiseLexica(codigos, alfabeto);
+			
+			sintax.analiseSintatica(resultadoAnaliseLexica.tokens, new Stack<MToken>(), false, resultadoAnaliseLexica.alfabeto);
 			
 			funcao.imprimeTokens(resultadoAnaliseLexica.tokens);
 			
