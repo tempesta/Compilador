@@ -4,8 +4,8 @@ import java.util.regex.*;
 
 public class AnalisadorLexico {	
 
-	//Funcao que verifica se uma substring é um identificador ou uma funcao, e retorna o que foi identificado
-	public MToken verificaIdentificadorOuPalavraReservada(String codigos)
+	//Funcao que verifica se uma substring ï¿½ um identificador ou uma funcao, e retorna o que foi identificado
+	public MToken verificaIdentificadorOuPalavraReservada(String codigos, int linha)
 	{
 		try {
 			
@@ -14,37 +14,37 @@ public class AnalisadorLexico {
 			//verifica identificador do tipo int
 			if(codigos.matches("^int"))
 			{
-				return new MToken("identificadores", codigos);
+				return new MToken("identificadores", codigos, linha);
 			}
 			
 			//verifica identificador do tipo float
 			if(codigos.matches("^float"))
 			{
-				return new MToken("identificadores", codigos);
+				return new MToken("identificadores", codigos, linha);
 			}
 			
 			//verifica identificador do tipo real
 			if(codigos.matches("^real"))
 			{
-				return new MToken("identificadores", codigos);
+				return new MToken("identificadores", codigos, linha);
 			}
 			
 			//verifica identificador do tipo char
 			if(codigos.matches("^char"))
 			{
-				return new MToken("identificadores", codigos);
+				return new MToken("identificadores", codigos, linha);
 			}
 			
 			//verifica identificador do tipo array
 			if(codigos.matches("^array"))
 			{
-				return new MToken("identificadores", codigos);
+				return new MToken("identificadores", codigos, linha);
 			}
 			
 			//verifica identificador do tipo register
 			if(codigos.matches("^register"))
 			{
-				return new MToken("identificadores", codigos);
+				return new MToken("identificadores", codigos, linha);
 			}
 			
 			///////  FUNCOES ////////
@@ -52,43 +52,43 @@ public class AnalisadorLexico {
 			//verifica palavras_reservadas do tipo struct
 			if(codigos.matches("^struct"))
 			{
-				return new MToken("palavras_reservadas", codigos);
+				return new MToken("palavras_reservadas", codigos, linha);
 			}
 			
 			//verifica palavras_reservadas do tipo if 
 			if(codigos.matches("^if"))
 			{
-				return new MToken("palavras_reservadas", codigos);
+				return new MToken("palavras_reservadas", codigos, linha);
 			}
 			
 			//verifica palavras_reservadas do tipo else
 			if(codigos.matches("^else"))
 			{
-				return new MToken("palavras_reservadas", codigos);
+				return new MToken("palavras_reservadas", codigos, linha);
 			}
 			
 			//verifica palavras_reservadas do tipo while
 			if(codigos.matches("^while"))
 			{
-				return new MToken("palavras_reservadas", codigos);
+				return new MToken("palavras_reservadas", codigos, linha);
 			}
 			
 			//verifica palavras_reservadas do tipo void
 			if(codigos.matches("^void"))
 			{
-				return new MToken("palavras_reservadas", codigos);
+				return new MToken("palavras_reservadas", codigos, linha);
 			}
 			
 			//verifica palavras_reservadas do tipo return
 			if(codigos.matches("^return"))
 			{
-				return new MToken("palavras_reservadas", codigos);
+				return new MToken("palavras_reservadas", codigos, linha);
 			}
 			
 			//verifica simbolo_inicial
 			if(codigos.matches("^Program"))
 			{
-				return new MToken("simbolo_inicial", codigos);
+				return new MToken("simbolo_inicial", codigos, linha);
 			}
 			
 			return null;
@@ -103,7 +103,7 @@ public class AnalisadorLexico {
 	public boolean verificaAbreParenteses(String codigos)
 	{
 		try {
-			//caso especal pois ) é considerado caracter especial em java, é necessario uma regex diferente
+			//caso especal pois ) ï¿½ considerado caracter especial em java, ï¿½ necessario uma regex diferente
 			if(codigos.equals("("))
 			{
 				return true;
@@ -119,7 +119,7 @@ public class AnalisadorLexico {
 	public boolean verificaFechaParenteses(String codigos)
 	{
 		try {
-			//caso especal pois ( é considerado caracter especial em java, é necessario uma regex diferente
+			//caso especal pois ( ï¿½ considerado caracter especial em java, ï¿½ necessario uma regex diferente
 			if(codigos.equals(")"))
 			{
 				return true;
@@ -135,7 +135,7 @@ public class AnalisadorLexico {
 	public boolean verificaAbreChaves(String codigos)
 	{
 		try {
-			//caso especal pois { é considerado caracter especial em java, é necessario uma regex diferente
+			//caso especal pois { ï¿½ considerado caracter especial em java, ï¿½ necessario uma regex diferente
 			if(codigos.equals("{"))
 			{
 				return true;
@@ -151,7 +151,7 @@ public class AnalisadorLexico {
 	public boolean verificaFechaChaves(String codigos)
 	{
 		try {
-			//caso especal pois } é considerado caracter especial em java, é necessario uma regex diferente
+			//caso especal pois } ï¿½ considerado caracter especial em java, ï¿½ necessario uma regex diferente
 			if(codigos.equals("}"))
 			{
 				return true;
@@ -522,7 +522,7 @@ public class AnalisadorLexico {
 	}
 	
 	//Funcao que identifica o token a partir de uma string
-	public MToken identificaToken(String substring)
+	public MToken identificaToken(String substring, int linha)
 	{
 		try {
 			MToken token = new MToken();
@@ -531,91 +531,91 @@ public class AnalisadorLexico {
 			if(verificaAbreParenteses(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("abre_parenteses", substring);
+				token = new MToken("abre_parenteses", substring, linha);
 			}
 			
 			//verifica fecha parentese
 			if(verificaFechaParenteses(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("fecha_parenteses", substring);
+				token = new MToken("fecha_parenteses", substring, linha);
 			}
 			
 			//verifica abre chaves
 			if(verificaAbreChaves(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("abre_chave", substring);
+				token = new MToken("abre_chave", substring, linha);
 			}
 			
 			//verifica fecha chaves
 			if(verificaFechaChaves(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("fecha_chave", substring);
+				token = new MToken("fecha_chave", substring, linha);
 			}
 			
 			//verifica abre colchetes
 			if(verificaFechaColchete(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("abre_colchete", substring);
+				token = new MToken("abre_colchete", substring, linha);
 			}
 			
 			//verifica fecha colchetes
 			if(verificaAbreColchete(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("fecha_colchete", substring);
+				token = new MToken("fecha_colchete", substring, linha);
 			}
 			
 			//verifica ponto e virgula
 			if(verificaPontoVirgula(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("ponto_virgula", substring);
+				token = new MToken("ponto_virgula", substring, linha);
 			}
 			
 			//verifica sinal de soma ou subtracao
 			if(verificaSinalSomaSubtracao(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("soma", substring);
+				token = new MToken("soma", substring, linha);
 			}
 			
 			//verifica sinal de multiplicacao ou divisao
 			if(verificaMultiplicacaoDivisao(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("mult", substring);
+				token = new MToken("mult", substring, linha);
 			}
 			
 			//verifica simbolos relacionais
 			if(verificaRecalional(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("relacional", substring);
+				token = new MToken("relacional", substring, linha);
 			}
 			
 			//verifica numeros inteiros
 			if(verificaNumerosInteiros(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("int", substring);
+				token = new MToken("int", substring, linha);
 			}
 			
 			//verifica numeros flutuantes
 			if(verificaNumerosFlutuantes(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("float", substring);
+				token = new MToken("float", substring, linha);
 			}
 			
 			//verifica sequencia de caracter, deve iniciar com letra para ser valido
 			if(verificaString(substring))
 			{
 				MToken tokenPalavra = new MToken();
-				tokenPalavra = verificaIdentificadorOuPalavraReservada(substring);
+				tokenPalavra = verificaIdentificadorOuPalavraReservada(substring, linha);
 				
 				//caso seja verificado um identificador ou uma palavra reservada adiciona o token encontrado entre as opcoes
 				if(tokenPalavra != null)
@@ -625,7 +625,7 @@ public class AnalisadorLexico {
 				}
 				else
 				{
-					token = new MToken("letra", substring);
+					token = new MToken("letra", substring, linha);
 				}
 				
 			}
@@ -653,6 +653,8 @@ public class AnalisadorLexico {
 			
 			MToken tokenIndentificado = new MToken();
 			
+			int contaLinha = 1;
+			
 			//para cada linha chama o metodo separarCadeiaCaracter que retorna um array de substrings
 			for (String strLinha : linhas) 
 			{
@@ -663,19 +665,19 @@ public class AnalisadorLexico {
 				//itera sobre cada substring para verificar a qual token perntence
 				for (String substring : strLinhaComEspaco) 
 				{
-					tokenIndentificado = identificaToken(substring);
+					tokenIndentificado = identificaToken(substring, contaLinha);
 					tokens.add(tokenIndentificado);
 					
 					if(tokenIndentificado.chave.equals("letra"))
 					{					
-						//primeiro verifica se o ultimo token que foi adicionado na lista de tokens é um identificador,
+						//primeiro verifica se o ultimo token que foi adicionado na lista de tokens ï¿½ um identificador,
 						//o que diz se a proxima sequencia e nome de uma variavel
 						if(tokens.size() > 1 && tokens.get(tokens.size() - 2).chave.equals("identificadores"))
 						{
 							//verifica se a sequencia de caracter pode ser nome de uma variavel e se ja foi declarada
 							if(!verificaVariavelDeclarada(substring, alfabeto))
 							{
-								//caso nao tenha sido declarada é adicionada ao alfabeto na chave variaveis_declaradas
+								//caso nao tenha sido declarada ï¿½ adicionada ao alfabeto na chave variaveis_declaradas
 								alfabeto.put("variaveis_declaradas", alfabeto.get("variaveis_declaradas") + substring + ",");
 							}
 							
@@ -684,6 +686,8 @@ public class AnalisadorLexico {
 						}
 					}
 				}
+				//incrementa contador linha
+				contaLinha++;
 			}
 			
 			return new ObjRetornoAnaliseLexica(tokens, alfabeto); 
