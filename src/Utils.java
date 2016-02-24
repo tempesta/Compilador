@@ -2,8 +2,58 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class Utils {
+	
+	//Funcao para agrupar tokens por linha
+	public  LinkedHashMap<Integer,ArrayList<MToken>> agrupaTokensPorLinha(ArrayList<MToken> listaTokens)
+	{
+		LinkedHashMap<Integer,ArrayList<MToken>> linhasToken = new LinkedHashMap<Integer, ArrayList<MToken>>();
+		
+		int aux = 1;
+		
+		ArrayList<MToken> arrayToken = new ArrayList<MToken>();
+		
+		for (int index = 0; index < listaTokens.size(); index++) 
+		{
+			if(listaTokens.get(index).linha != aux)
+			{
+				ArrayList<MToken> ar = new ArrayList<MToken>(arrayToken);			
+				
+				linhasToken.put(aux, ar);
+				aux++;
+				arrayToken.clear();
+			}
+			arrayToken.add(listaTokens.get(index));	
+		}
+		
+		linhasToken.put(aux, arrayToken);
+		
+//			if(arrayToken.isEmpty())
+//			{
+//				arrayToken.add(listaTokens.get(index));
+//			}
+//			else
+//			{
+//				if(listaTokens.get(index -1).linha == listaTokens.get(index).linha)
+//				{
+//					arrayToken.add(listaTokens.get(index));
+//				}
+//				else
+//				{
+//					linhasToken.put(arrayToken.get(index -1).linha, arrayToken);
+//					arrayToken.clear();
+//					arrayToken.add(listaTokens.get(index));
+//				}
+//			}
+			
+//			
+//			
+		
+		
+		return linhasToken;
+	}
 	
 	//Funcao criada para ler o arquivo com codigo fonte
 	public ArrayList<String> leituraArquivo(String nomeArquivo)
