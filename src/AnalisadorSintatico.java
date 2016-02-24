@@ -6,25 +6,13 @@ import javax.security.auth.Subject;
 import javax.swing.text.html.HTMLDocument.Iterator;
 
 public class AnalisadorSintatico {
-//	//Funcao que sera chamada recursivamente para analisar os tokens da lista de tokens em relacao aos objetos da pilha
-//	private ObjAnaliseSintatica verificaPilhaListaDeTokens(ArrayList<MToken> listaTokens, Stack<MToken> pilha)
-//	{
-//		try {
-//			
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			System.out.println("Erro ao relacionar os tokens lidos com a pilha. " + e);
-//			//obj vazio
-//			return new ObjAnaliseSintatica();
-//		}
-//	}
-	
+
 	//Funcao que verifica proximo token para token do tipo identificador, retorna true(identificador seguido de token letra) ou false
 	private boolean verificaTokenIdentificador(MToken pilha, MToken token, Boolean condicional)
 	{
 		try {			
 			//verifica se o identificador esta dentro de uma condicao
-			if(condicional)
+			/*if(condicional)
 			{
 				//verifica se a chave do ultimo token na pilha é um identificador
 				if(pilha.chave.equals("identificador"))
@@ -35,7 +23,7 @@ public class AnalisadorSintatico {
 						return true;
 					}
 				}
-			}
+			}*/
 			
 			//caso a chave do ultimo elemento da pilha seja identificador
 			if(pilha.chave.equals("identificadores"))
@@ -46,6 +34,8 @@ public class AnalisadorSintatico {
 					//caso seja(identificador reconhecido), desempilha identificador
 					return true;
 				}
+				//Em caso de erro(caso nao encontre o proximo token compativel) imprime na tela uma mensagem de erro e faz referencia a linha onde ocorreu
+				System.out.println("Erro sintatico apos o token " + pilha.valor + "  na linha: " + pilha.linha);
 			}	
 			return false;
 		} catch (Exception e) {
@@ -77,6 +67,8 @@ public class AnalisadorSintatico {
 						case "!=":
 							return true;
 						default:
+							//Em caso de erro(caso nao encontre o proximo token compativel) imprime na tela uma mensagem de erro e faz referencia a linha onde ocorreu
+							System.out.println("Erro sintatico apos o token " + pilha.valor + "  na linha: " + pilha.linha);
 							return false;
 					}					
 				}
@@ -110,6 +102,9 @@ public class AnalisadorSintatico {
 				{
 					return true;
 				}
+				
+				//Em caso de erro(caso nao encontre o proximo token compativel) imprime na tela uma mensagem de erro e faz referencia a linha onde ocorreu
+				System.out.println("Erro sintatico apos o token " + pilha.valor + "  na linha: " + pilha.linha);
 			}
 			return false;
 		} catch (Exception e) {
@@ -127,7 +122,7 @@ public class AnalisadorSintatico {
 				case "int":
 				case "float":
 				case "char":
-					//se estiver dentro de uma condicao
+					/*//se estiver dentro de uma condicao
 					if(condicional)
 					{
 						//dentro de condicao o proximo token deve ser ')', se encontrar ')' retorna true
@@ -135,13 +130,24 @@ public class AnalisadorSintatico {
 						{
 							return true;
 						}
+						//Em caso de erro(caso nao encontre o proximo token compativel) imprime na tela uma mensagem de erro e faz referencia a linha onde ocorreu
+						System.out.println("Erro sintatico apos o token " + pilha.valor + "  na linha: " + pilha.linha);
+						
+						//retorna false para que a execucao continue
 						return false;
-					}
+					}*/
+					//se o token lido for o esperado(';' neste caso) retorna true
 					if(token.valor.equals(";"))
 					{
 						return true;
 					}
+					//Em caso de erro(caso nao encontre o proximo token compativel) imprime na tela uma mensagem de erro e faz referencia a linha onde ocorreu
+					System.out.println("Erro sintatico apos o token " + pilha.valor + "  na linha: " + pilha.linha);
+					
+					//caso nao encontre o token esperado, apos relatar o erro na tela retorna false para que a execucao continue
+					return false;
 				default:
+					//retorna false caso o token analisado(ultima posicao da pilha) nao for um valor
 					return false;
 			}
 		} catch (Exception e) {
@@ -162,6 +168,8 @@ public class AnalisadorSintatico {
 				{
 					return true;
 				}
+				//Em caso de erro(caso nao encontre o proximo token compativel) imprime na tela uma mensagem de erro e faz referencia a linha onde ocorreu
+				System.out.println("Erro sintatico apos o token " + pilha.valor + "  na linha: " + pilha.linha);
 			}
 			
 			//caso a chave do ultimo elemento da pilha seja while
@@ -170,8 +178,11 @@ public class AnalisadorSintatico {
 				//se o token atual da lista de token for abre parentese o inicio do while esta valido. Obs.: sera verificado o restante em outro metodo
 				if(token.valor.equals("("))
 				{
+					//retorna verdadeiro para inicio correto de uma condicao while
 					return true;
 				}
+				//Em caso de erro(caso nao encontre o proximo token compativel) imprime na tela uma mensagem de erro e faz referencia a linha onde ocorreu
+				System.out.println("Erro sintatico apos o token " + pilha.valor + "  na linha: " + pilha.linha);
 			}
 			return false;
 		} catch (Exception e) {
@@ -187,11 +198,13 @@ public class AnalisadorSintatico {
 			//caso a chave do ultimo elemento da pilha seja else
 			if(pilha.valor.equals("else"))
 			{
-				//caso o valor do token seja '{'
+				//caso o valor do token seja '{', retorna true
 				if(token.valor.equals("{"))
 				{
 					return true;
 				}
+				//Em caso de erro(caso nao encontre o proximo token compativel) imprime na tela uma mensagem de erro e faz referencia a linha onde ocorreu
+				System.out.println("Erro sintatico apos o token " + pilha.valor + "  na linha: " + pilha.linha);
 			}
 			
 			//caso a chave do ultimo elemento da pilha seja struct
@@ -200,9 +213,13 @@ public class AnalisadorSintatico {
 				//caso o valor do token seja '{'
 				if(token.valor.equals("{"))
 				{
+					//retorna true para inicio correto da declaracao de um struct
 					return true;
 				}
+				//Em caso de erro(caso nao encontre o proximo token compativel) imprime na tela uma mensagem de erro e faz referencia a linha onde ocorreu
+				System.out.println("Erro sintatico apos o token " + pilha.valor + "  na linha: " + pilha.linha);
 			}
+			//retorna falso caso o elemento da pilha nao seja do tipo else ou struct
 			return false;
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -220,9 +237,13 @@ public class AnalisadorSintatico {
 				//se o proximo token apos o return for letra retorna true
 				if(token.chave.equals("letra"))
 				{
+					//retorna true caso o proximo token lido for compativel com o esperado pelo token na ultima posicao da pilha
 					return true;
-				}				
+				}	
+				//Em caso de erro(caso nao encontre o proximo token compativel) imprime na tela uma mensagem de erro e faz referencia a linha onde ocorreu
+				System.out.println("Erro sintatico apos o token " + pilha.valor + "  na linha: " + pilha.linha);
 			}
+			//retorna falso caso o elemento em analise da pilha nao for do tipo palavra reservada de valor 'return'
 			return false;
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -240,9 +261,13 @@ public class AnalisadorSintatico {
 				//se o proximo token apos o void for abre parentese retorna true
 				if(token.valor.equals("("))
 				{
+					//retorna true caso o proximo token lido for compativel com o esperado pelo token na ultima posicao da pilha, no caso '('
 					return true;
-				}				
+				}	
+				//Em caso de erro(caso nao encontre o proximo token compativel) imprime na tela uma mensagem de erro e faz referencia a linha onde ocorreu
+				System.out.println("Erro sintatico apos o token " + pilha.valor + "  na linha: " + pilha.linha);
 			}
+			//retorna false caso o ultimo elemento da pilha nao for do uma palavras reservada de valor = 'void'
 			return false;
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -275,11 +300,12 @@ public class AnalisadorSintatico {
 					}
 					if(token.chave.equals("letra"))
 					{
-						AnalisadorLexico lex = new AnalisadorLexico();
+						/*AnalisadorLexico lex = new AnalisadorLexico();
 						if(lex.verificaVariavelDeclarada(token.valor, alfabeto))
 						{
 							return true;
-						}
+						}*/
+						return true;
 					}
 					return false;
 				case "<=":
