@@ -1,3 +1,4 @@
+import java.security.KeyStore.Entry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,13 +30,14 @@ public class AnalisadorSemantico {
 		
 		//variavel que sinaliza se o escopo eh o principal ou nao
 		boolean escopoPrincipal = true;
+		boolean escopoSecundario = false;
 		
 		//variavel que acumula o numero do escopo
 		int contadorEscopos = 0;
 		int contadorEscoposSecundarios = 0;
 		
 		//percorre a lista de tokens para realizar a classificacao
-		for (int i = 0; i <= tokens.size(); i++) {
+		for (int i = 0; i < tokens.size(); i++) {
 			
 			//pega linha de tokens
 			ArrayList<MToken> linhaDeTokens = new ArrayList<MToken>(tokens.get(i+1));
@@ -43,25 +45,31 @@ public class AnalisadorSemantico {
 			//percorre linha de tokens, acrecentando-os ao hash declaracoesBloco
 			for (int j = 0; j < linhaDeTokens.size(); j++) {
 				
-				//verifica entrada em escopo dentro de escopo secundario
-				if ( linhaDeTokens.get(j).valor.equals( "{" ) && !escopoPrincipal ) {
-					contadorEscoposSecundarios++;
+				//verifica se eh o escopo principal
+				if (escopoPrincipal) {
+					
+					//verifica inicio de outro escopo a partir do escopo principal
+					if ( linhaDeTokens.get(j).valor.equals( "{" ) ) {
+						escopoPrincipal = false;
+						contadorEscopos++;
+					}
+					
+				} else {
+					
+					//verifica entrada em escopo dentro de escopo secundario
+					if ( linhaDeTokens.get(j).valor.equals( "{" ) ) {
+						contadorEscoposSecundarios++;
+						escopoSecundario = true;
+					}
+					
+					//verifica saida de escopo dentro de escopo secundario
+					if ( linhaDeTokens.get(j).valor.equals( "}" )  && escopoSecundario) {
+						contadorEscoposSecundarios--;
+						escopoSecundario = false;
+					} else if ( linhaDeTokens.get(j).valor.equals( "}" ) && !escopoSecundario )
+						escopoPrincipal = true;	
 				}
-				
-				//verifica saida de escopo dentro de escopo secundario
-				if ( linhaDeTokens.get(j).valor.equals( "}" ) && !escopoPrincipal ) {
-					contadorEscoposSecundarios--;
-				}
-				
-				//verifica inicio de outro escopo a partir do escopo principal
-				if ( linhaDeTokens.get(j).valor.equals( "{" )) {
-					escopoPrincipal = false;
-					contadorEscopos++;
-				}
-				
-				//verifica se voltou para o escopo principal
-				if ( linhaDeTokens.get(j).valor.equals( "}" ))
-					escopoPrincipal = true;				
+							
 				
 				if ( linhaDeTokens.get(j).chave.equals("letra")) {
 					
@@ -96,8 +104,13 @@ public class AnalisadorSemantico {
 				}		
 				
 			}
+					
 			
-			
+		}
+		for (java.util.Map.Entry<String, String> entry : this.declaracoesBloco.entrySet()) {
+			String key = entry.getKey();
+			String value = entry.getValue();
+			System.out.println(key + " = " + value);
 		}
 		
 		
