@@ -44,11 +44,15 @@ public class Main {
 			
 			LinkedHashMap<Integer, ArrayList<MToken>> linhasToken = new LinkedHashMap<Integer, ArrayList<MToken>>();
 			
+			//tokens formatados na mesma linha
 			linhasToken = funcao.agrupaTokensPorLinha(resultadoAnaliseLexica.tokens);
 
-			sintax.analiseSintatica(resultadoAnaliseLexica.tokens, new Stack<MToken>(), false, resultadoAnaliseLexica.alfabeto);
+//			sintax.analiseSintatica(resultadoAnaliseLexica.tokens, new Stack<MToken>(), false, resultadoAnaliseLexica.alfabeto);
 			
 			funcao.imprimeTokens(resultadoAnaliseLexica.tokens);
+			
+			AnalisadorSemantico semantico = new AnalisadorSemantico();
+			semantico.constroiDeclaracaoBlocos(alfabeto, linhasToken);
 			
 		} catch (Exception e) {
 			System.console().writer().println(e + "cannot open this file");

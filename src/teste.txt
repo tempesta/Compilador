@@ -1,5 +1,13 @@
 Program
 int i = 8;
+int a;
+{
+int b;
+{
+c
+}
+int d;
+}
 int abcd = 10;
 if(abcd <= 6){
   abcd = abcd + 1;
