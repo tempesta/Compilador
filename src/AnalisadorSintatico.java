@@ -6,19 +6,7 @@ import javax.security.auth.Subject;
 import javax.swing.text.html.HTMLDocument.Iterator;
 
 public class AnalisadorSintatico {
-//	//Funcao que sera chamada recursivamente para analisar os tokens da lista de tokens em relacao aos objetos da pilha
-//	private ObjAnaliseSintatica verificaPilhaListaDeTokens(ArrayList<MToken> listaTokens, Stack<MToken> pilha)
-//	{
-//		try {
-//			
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			System.out.println("Erro ao relacionar os tokens lidos com a pilha. " + e);
-//			//obj vazio
-//			return new ObjAnaliseSintatica();
-//		}
-//	}
-	
+
 	//Funcao que verifica proximo token para token do tipo identificador, retorna true(identificador seguido de token letra) ou false
 	private boolean verificaTokenIdentificador(MToken pilha, MToken token, Boolean condicional)
 	{
