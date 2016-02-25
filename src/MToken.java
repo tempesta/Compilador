@@ -16,4 +16,8 @@ public class MToken{
 	{
 		
 	}
+
+	public MToken(MToken mToken) {
+		this(mToken.chave, mToken.valor, mToken.linha);
+	}
 }

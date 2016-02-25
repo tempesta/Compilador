@@ -52,7 +52,12 @@ public class Main {
 			funcao.imprimeTokens(resultadoAnaliseLexica.tokens);
 			
 			AnalisadorSemantico semantico = new AnalisadorSemantico();
+			
+			//vincula cada variavel ao seu escopo
 			semantico.constroiDeclaracaoBlocos(alfabeto, linhasToken);
+			
+			//acrescenta as declaracoes na tabela de simbolos
+			semantico.incrementaTabela(alfabeto, linhasToken);
 			
 		} catch (Exception e) {
 			System.console().writer().println(e + "cannot open this file");

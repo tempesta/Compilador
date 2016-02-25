@@ -1,6 +1,9 @@
+import java.lang.reflect.Array;
 import java.security.KeyStore.Entry;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class AnalisadorSemantico {
@@ -107,14 +110,42 @@ public class AnalisadorSemantico {
 					
 			
 		}
-		for (java.util.Map.Entry<String, String> entry : this.declaracoesBloco.entrySet()) {
+//		for (java.util.Map.Entry<String, String> entry : this.declaracoesBloco.entrySet()) {
+//			String key = entry.getKey();
+//			String value = entry.getValue();
+//			System.out.println(key + " = " + value);
+//		}		
+	}
+	
+	public void incrementaTabela(final HashMap<String, String> alfabeto, LinkedHashMap<Integer, ArrayList<MToken>> linhasToken) {
+		
+		for (java.util.Map.Entry<Integer, ArrayList<MToken>> entry : linhasToken.entrySet()) {
+			ArrayList<MToken> linha = new ArrayList<MToken>(entry.getValue());
+			
+			for (int i = 0; i < linha.size(); i++) {
+				
+				MToken token = new MToken( linha.get(i) );
+				if (token.valor.equals("int") || token.valor.equals("char") || token.valor.equals("float") || token.valor.equals("void")) {
+					if (i + 1 <= linha.size()) {
+						if (alfabeto.get(token.valor) == null) {
+							alfabeto.put(token.valor, linha.get(i + 1).valor);
+						} else {
+							String valor = alfabeto.get(token.valor);
+							alfabeto.put(token.valor, valor + "," + linha.get(i + 1).valor);
+						}
+					}					
+				}
+				
+			}
+			
+			
+		}
+		
+		for (java.util.Map.Entry<String, String> entry : alfabeto.entrySet()) {
 			String key = entry.getKey();
 			String value = entry.getValue();
 			System.out.println(key + " = " + value);
-		}
-		
-		
-		
+		}	
 		
 		
 	}
