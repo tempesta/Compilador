@@ -305,8 +305,14 @@ public class AnalisadorSintatico {
 						{
 							return true;
 						}*/
+						
 						return true;
 					}
+					
+					//Em caso de erro(caso nao encontre o proximo token compativel) imprime na tela uma mensagem de erro e faz referencia a linha onde ocorreu
+					System.out.println("Erro sintatico apos o token " + pilha.valor + "  na linha: " + pilha.linha);
+					
+					//retorna falso apos relatar mensagem de erro, para que a execucao continue
 					return false;
 				case "<=":
 				case ">=":
@@ -322,7 +328,14 @@ public class AnalisadorSintatico {
 					{
 						return true;
 					}
+					//Em caso de erro(caso nao encontre o proximo token compativel) imprime na tela uma mensagem de erro e faz referencia a linha onde ocorreu
+					System.out.println("Erro sintatico apos o token " + pilha.valor + "  na linha: " + pilha.linha);
+					
+					//retorna falso apos relatar mensagem de erro, para que a execucao continue
+					return false;
 				default:
+					
+					//retorna false caso o token da pilha analisado nao for do tipo especifico ao qual a funcao verifica
 					return false;
 			}
 		} catch (Exception e) {
@@ -331,19 +344,45 @@ public class AnalisadorSintatico {
 		}
 	}
 	
-	//Funcao que verifica o proximo token do tipo ')'
-	private Boolean verificaTokenFechaParentese(MToken pilha, MToken token)
+	//Funcao que verifica o proximo token do tipo '('
+	private Boolean verificaTokenAbreParentese(MToken pilha, MToken token)
 	{
-		try {
-				//caso o ultimo token na pilha for '('
-				if(pilha.valor.equals("("))
+		try 
+		{
+			//caso o ultimo token na pilha for '('
+			if(pilha.valor.equals("("))
+			{
+				//se o token atual seja fecha parentese, indica que esta fechado alguma condicao
+				if(token.valor.equals(")"))
 				{
-					//se o token atual seja fecha parentese, indica que esta fechado alguma condicao
-					if(token.valor.equals(")"))
-					{
-						return true;
-					}
+					return true;
 				}
+			}
+			//retorna false caso o token da pilha analisado nao for do tipo especifico ao qual a funcao verifica
+			return false;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
+	}
+	
+	
+	//Funcao que verifica o proximo token do tipo '{'
+	private Boolean verificaTokenAbreChave(MToken pilha, MToken token)
+	{
+		try 
+		{
+			//caso o ultimo token na pilha for '{'
+			if(pilha.valor.equals("{"))
+			{
+				//se o token atual for fecha chave, indica o fim de um bloco de comando, if, else, while, struct ou de uma funcao
+				if(token.valor.equals("}"))
+				{
+					return true;
+				}
+				
+			}
+			//retorna false caso o token da pilha analisado nao for do tipo especifico ao qual a funcao verifica
 			return false;
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -354,16 +393,56 @@ public class AnalisadorSintatico {
 	//Funcao que verifica o proximo token do tipo '}'
 	private Boolean verificaTokenFechaChave(MToken pilha, MToken token)
 	{
-		try {
-				//caso o ultimo token na pilha for '{'
-				if(pilha.valor.equals("{"))
+		try 
+		{
+			//caso o ultimo token na pilha for '}'
+			if(pilha.valor.equals("}"))
+			{
+				//se a chave do token atual for 'letra' , indica o inicio de um novo comando, e retorna true
+				if(token.chave.equals("letra"))
 				{
-					//se o token atual for fecha chave, indica o fim de um bloco de comando, if, else, while ou de uma funcao
-					if(token.valor.equals("}"))
-					{
-						return true;
-					}
+					return true;
 				}
+				//se a chave do token atual for 'indentificadores' , indica o inicio de um novo comando, e retorna true
+				if(token.chave.equals("identificadores"))
+				{
+					return true;
+				}
+				//Em caso de erro(caso nao encontre o proximo token compativel) imprime na tela uma mensagem de erro e faz referencia a linha onde ocorreu
+				System.out.println("Erro sintatico apos o token " + pilha.valor + "  na linha: " + pilha.linha);
+				
+				//retorna falso apos relatar mensagem de erro, para que a execucao continue
+				return false;
+			}
+			//retorna false caso o token da pilha analisado nao for do tipo especifico ao qual a funcao verifica
+			return false;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
+	}
+	
+	//Funcao que verifica o proximo token do tipo ')'. O parametro sera o token anterior da lista, pois os simbolos ')' e '}' nao sao empilhados
+	private Boolean verificaTokenFechaParentese(MToken tokenAnterior, MToken token)
+	{
+		try 
+		{
+			//caso o ultimo token na pilha for ')' indica fim de uma condicao, que deve vir a abertura de um bloco de codigo em seguida ('{')
+			if(tokenAnterior.valor.equals(")"))
+			{
+				//se o token atual for fecha chave, indica o inicio de um bloco de comando, if, else, while ou de uma funcao
+				if(token.valor.equals("{"))
+				{
+					return true;
+				}
+				//Em caso de erro(caso nao encontre o proximo token compativel) imprime na tela uma mensagem de erro e faz referencia a linha onde ocorreu
+				System.out.println("Erro sintatico apos o token " + tokenAnterior.valor + "  na linha: " + tokenAnterior.linha);
+				
+				//retorna falso apos relatar mensagem de erro, para que a execucao continue
+				return false;
+			}
+			
+			//retorna false caso o token da pilha analisado nao for do(s) tipo(s) especifico ao qual a funcao verifica
 			return false;
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -387,8 +466,13 @@ public class AnalisadorSintatico {
 					{
 						return true;
 					}
+					//Em caso de erro(caso nao encontre o proximo token compativel) imprime na tela uma mensagem de erro e faz referencia a linha onde ocorreu
+					System.out.println("Erro sintatico apos o token " + pilha.valor + "  na linha: " + pilha.linha);
+					
+					//retorna falso apos relatar mensagem de erro, para que a execucao continue
 					return false;
 				default:
+					//retorna false caso o token da pilha analisado nao for do(s) tipo(s) especifico ao qual a funcao verifica
 					return false;
 			}
 		} catch (Exception e) {
@@ -401,7 +485,6 @@ public class AnalisadorSintatico {
 	public void analiseSintatica(ArrayList<MToken> listaTokens, Stack<MToken> pilha, boolean condicional, HashMap<String, String> alfabeto)
 	{
 		try {
-//			Stack<MToken> pilha = new Stack<>();
 			
 			//verifica se o primeiro token inicia um programa, ou seja, tem chave = 'simbolo_inicial' ou valor = 'Progam' 
 			if(listaTokens.get(0).chave.equals("simbolo_inicial"))
@@ -409,39 +492,169 @@ public class AnalisadorSintatico {
 				listaTokens.remove(0);
 			}
 			
-			pilha.push(listaTokens.get(0));
+			//pilha.push(listaTokens.get(0));
 			
-			int index = 1;
+			int index = 0;
 			
-			while (index < listaTokens.size())
-			{				
+			//while (index < listaTokens.size())
+			//{				
+				//caso a pilha estiver vazia empilha o primeiro objeto
+				if(pilha.isEmpty())
+				{
+					//empliha token
+					pilha.push(listaTokens.get(index));
+					
+					//atualiza o index para ler o proximo elemento da lista
+					index++;
+					
+					if(index < listaTokens.size())
+					{
+						//cria a sublista sem o token empilhado
+						ArrayList<MToken> sublista = new ArrayList<>(listaTokens.subList(index, listaTokens.size()));
+						
+						//chama o metodo novamente sem a partir de uma sublista sem p token da posicao 0(que esta na pilha)
+						analiseSintatica(sublista, pilha, condicional, alfabeto);
+					}
+				}
+				
 				//caso o ultimo elemento da pilha for '(' e o proximo elemento for ')', desempilha
-				if(verificaTokenFechaParentese(pilha.lastElement(), listaTokens.get(index)))
+				if(verificaTokenAbreParentese(pilha.lastElement(), listaTokens.get(index)))
 				{
 					//seta para false a flag utilizada para controle se o token esta ou nao dentro de uma condicao
 					condicional = false;
+					//deseimpilha, o que indica que a condicao foi fechada com sucesso
 					pilha.pop();
+					
+					//empilha o prioximo token
+					pilha.push(listaTokens.get(index));
+					
+					//atualiza o index para montar a proxima sublista
+					index++;
+					
+					if(index < listaTokens.size())
+					{
+						//cria a sublista sem o token empilhado
+						ArrayList<MToken> sublista = new ArrayList<>(listaTokens.subList(index, listaTokens.size()));
+						
+						//chama o metodo novamente sem a partir de uma sublista sem p token da posicao 0(que esta na pilha)
+						analiseSintatica(sublista, pilha, condicional, alfabeto);
+					}
+					
+				}
+				
+				//caso o ultimo elemento da pilha for ')' e o proximo for '{', desempilha
+				if(verificaTokenFechaParentese(pilha.lastElement(), listaTokens.get(index)))
+				{
+					//desempilha o ultimo elemento, no caso ')'
+					pilha.pop();
+					
+					//empilha token index atual da lista
+					pilha.push(listaTokens.get(index));
+					
+					//atualiza index para proximo elemento
+					index++;
+					
+					//verifica se o index eh menor que o numero de elementos restantes na lista de tokens, para nao acessar posicao inexistente, e parar apos ler o ultimo token
+					if(index < listaTokens.size())
+					{
+						//cria a sublista sem o token empilhado
+						ArrayList<MToken> sublista = new ArrayList<>(listaTokens.subList(index, listaTokens.size()));
+						
+						//chama o metodo novamente sem a partir de uma sublista sem p token da posicao 0(que esta na pilha)
+						analiseSintatica(sublista, pilha, condicional, alfabeto);
+					}
+					
 				}
 				
 				//caso o ultimo elemento da pilha for '{' e o proximo for '}', desempilha
+				if(verificaTokenAbreChave(pilha.lastElement(), listaTokens.get(index)))
+				{
+					//desempilha o ultimo elemento. co caso '}'
+					pilha.pop();
+					
+					//empilha token atual da lista
+					pilha.push(listaTokens.get(index));
+					
+					//atualiza o index para o proximo elemento
+					index++;
+					
+					if(index < listaTokens.size())
+					{
+						//cria a sublista sem o token empilhado
+						ArrayList<MToken> sublista = new ArrayList<>(listaTokens.subList(index, listaTokens.size()));
+						
+						//chama o metodo novamente sem a partir de uma sublista sem p token da posicao 0(que esta na pilha)
+						analiseSintatica(sublista, pilha, condicional, alfabeto);
+					}
+					
+				}
+				
+				//caso o ultimo elemento da pilha for '}' e o proximo elementos for um identificador ou uma variavel(token de chave = letra), desempilha
 				if(verificaTokenFechaChave(pilha.lastElement(), listaTokens.get(index)))
 				{
+					//desempilha o ultimo elemento, no caso '}'
 					pilha.pop();
+					
+					//empilha token atual da lista
+					pilha.push(listaTokens.get(index));
+					
+					//atualiza o index para o proximo elemento
+					index++;
+					
+					if(index < listaTokens.size())
+					{
+						//cria a sublista sem o token empilhado
+						ArrayList<MToken> sublista = new ArrayList<>(listaTokens.subList(index, listaTokens.size()));
+						
+						//chama o metodo novamente sem a partir de uma sublista sem p token da posicao 0(que esta na pilha)
+						analiseSintatica(sublista, pilha, condicional, alfabeto);
+					}
 				}
 				
 				//caso o ultimo elemento da pilha tenha chave = 'identificador', chama funcao que verifica se o atual elemento da lista e uma variavel, sim = desempilha
 				if(verificaTokenIdentificador(pilha.lastElement(), listaTokens.get(index), condicional))
 				{
+					//desempilha o ultimo elemento, no caso um identificador
 					pilha.pop();
 					
-					analiseSintatica(new ArrayList<>(listaTokens.subList(index, listaTokens.size())), pilha, condicional, alfabeto);			
+					//empilha token atual da lista
+					pilha.push(listaTokens.get(index));
+					
+					//atualiza o index para o proximo elemento
+					index++;
+					
+					if(index < listaTokens.size())
+					{
+						//cria a sublista sem o token empilhado
+						ArrayList<MToken> sublista = new ArrayList<>(listaTokens.subList(index, listaTokens.size()));
+						
+						//chama o metodo novamente sem a partir de uma sublista sem p token da posicao 0(que esta na pilha)
+						analiseSintatica(sublista, pilha, condicional, alfabeto);
+					}		
 				}
 				
 				//caso o ultimo elemento da pilha tenha chave = 'if' ou 'while', chama funcao que verifica se o atual elemento da lista de tokens e = '(', sim chama a funcao novamente
 				if(verificaTokenIfOuWhile(pilha.lastElement(), listaTokens.get(index)))
 				{
+					//desempilha o ultimo elemento, no caso o valor 'if', 'while' ou 'void'
+					pilha.pop();
 					
-					//desempilha a palavra reservada, pois o proximo token corresponde
+					//empilha token atual da lista
+					pilha.push(listaTokens.get(index));
+					
+					//atualiza o index para o proximo elemento
+					index++;
+					
+					if(index < listaTokens.size())
+					{
+						//cria a sublista sem o token empilhado
+						ArrayList<MToken> sublista = new ArrayList<>(listaTokens.subList(index, listaTokens.size()));
+						
+						//chama o metodo novamente sem a partir de uma sublista sem p token da posicao 0(que esta na pilha)
+						analiseSintatica(sublista, pilha, condicional, alfabeto);
+					}	
+					
+					/*//desempilha a palavra reservada, pois o proximo token corresponde
 					pilha.pop();
 					
 					//se depois do if for '('
@@ -460,7 +673,7 @@ public class AnalisadorSintatico {
 					//indica para a funcao que os proximos tokens estao dentro de uma condicao
 					condicional = true;
 					
-					analiseSintatica(subLista, pilha, condicional, alfabeto);
+					analiseSintatica(subLista, pilha, condicional, alfabeto);*/
 				}
 				
 				//caso o ultimo elemento da pilha tenha chave = 'else' ou 'struct', chama funcao que verifica se o atual elemento da lista de tokens e = '{', se sim chama funcao novamente
@@ -507,7 +720,7 @@ public class AnalisadorSintatico {
 					
 					if(index >= listaTokens.size())
 					{
-						break;
+						//break;
 					}
 					//cria sublista de tokens da lista de tokens a partir do index atual ate o fim da lista
 					ArrayList<MToken> subLista = new ArrayList<>(listaTokens.subList(index, listaTokens.size()));
@@ -579,7 +792,7 @@ public class AnalisadorSintatico {
 				}
 				
 				index++;
-			}
+			//}
 			
 			if(!pilha.empty())
 			{
