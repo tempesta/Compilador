@@ -159,7 +159,7 @@ public class AnalisadorSintatico {
 			}
 			
 			//caso a chave do ultimo elemento da pilha seja while
-			if(token.valor.equals("while"))
+			if(pilha.valor.equals("while"))
 			{
 				//se o token atual da lista de token for abre parentese o inicio do while esta valido. Obs.: sera verificado o restante em outro metodo
 				if(token.valor.equals("("))
@@ -838,12 +838,6 @@ public class AnalisadorSintatico {
 						//chama o metodo novamente sem a partir de uma sublista sem p token da posicao 0(que esta na pilha)
 						return analiseSintatica(sublista, pilha, condicional, parametro, bloco, alfabeto);
 					}
-					
-//						pilha.pop();
-//						
-//						ArrayList<MToken> subLista = new ArrayList<>(listaTokens.subList(index, listaTokens.size()));
-//						
-//						return analiseSintatica(subLista, pilha, condicional, alfabeto);
 				}
 				
 				//caso o ultimo elemento da pilha tenha cahve = 'letra', chama funcao que verifica se o atual elemento da lista de tokens e = ';', ',', valor
@@ -880,25 +874,6 @@ public class AnalisadorSintatico {
 							return pilha;
 						}
 					}
-					
-//						//desempilha letra
-//						pilha.pop();
-//						
-//						if(tokenLista.valor.equals(";"))
-//						{
-//							//o token esta correto, pois indica o fim de uma declaracao ou atribuicao. Porem nao deve ser adicionado na pilha na proxima iteracao
-//							index++;
-//						}
-//						
-//						if(index >= listaTokens.size())
-//						{
-//							//break;
-//						}
-//						//cria sublista de tokens da lista de tokens a partir do index atual ate o fim da lista
-//						ArrayList<MToken> subLista = new ArrayList<>(listaTokens.subList(index, listaTokens.size()));
-//						
-//						//chama novamente a analise sintatica para a sublista
-//						return analiseSintatica(subLista, pilha, condicional, alfabeto);
 				}
 				
 				//caso o ultimo elemento da pilha tenha chave = 'relacional', chama funcao que verifica se o proximo elemento eh um valor valido de acordo com o relacional lido
@@ -922,10 +897,6 @@ public class AnalisadorSintatico {
 						//chama o metodo novamente sem a partir de uma sublista sem p token da posicao 0(que esta na pilha)
 						return analiseSintatica(sublista, pilha, condicional, parametro, bloco, alfabeto);
 					}
-					
-//						pilha.pop();
-//						
-//						return analiseSintatica(new ArrayList<>(listaTokens.subList(index, listaTokens.size())), pilha, condicional, alfabeto);		
 				}
 				
 				//caso o ultimo elemento da pilha tenha chave = 'soma', '/'(divisao) ou 'mult' chama funcao que verifica se o proximo elemento eh um valor valido de acordo com a chave
@@ -949,10 +920,6 @@ public class AnalisadorSintatico {
 						//chama o metodo novamente sem a partir de uma sublista sem p token da posicao 0(que esta na pilha)
 						return analiseSintatica(sublista, pilha, condicional, parametro, bloco, alfabeto);
 					}
-					
-//						pilha.pop();
-//						
-//						return analiseSintatica(new ArrayList<>(listaTokens.subList(index, listaTokens.size())), pilha, condicional, alfabeto);		
 				}
 				
 				//caso o ultimo elemento da pilha tenha chave = valor(int, float ou char), chama funcao que verifica se o proximo elemento da lista de token eh ';' ou ')'(caso estiver terminando uma condicao)
@@ -992,48 +959,6 @@ public class AnalisadorSintatico {
 							return pilha;
 						}
 					}
-					
-//						pilha.pop();
-//						
-//						if(tokenLista.valor.equals(";"))
-//						{
-//							//o token esta correto, pois indica o fim de uma declaracao ou atribuicao. Porem nao deve ser adicionado na pilha na proxima iteracao
-//							index++;
-//						}
-//						
-//						if(!pilha.isEmpty())
-//						{
-//							if(verificaTokenFechaParentese(tokenPilha, tokenLista))
-//							{
-//								pilha.pop();
-//								//indica que e o fim da condicional ou declaracao de parametro
-//								condicional = false;
-//								
-//								index++;
-//							}
-//							
-//							if(!pilha.isEmpty())
-//							{
-//							
-//								if(verificaTokenFechaChave(tokenPilha, tokenLista))
-//								{
-//									pilha.pop();
-//									//indica que e o fim da do bloco entre chaves
-//									condicional = false;
-//									
-//								}
-//							}
-//							
-//							//se o proximo elemento de pois da condicao do if for '{'
-//							if(tokenLista.valor.equals("{"))
-//							{
-//								//empilha
-//								pilha.push(tokenLista);
-//							}
-//							
-//							index++;
-//						}
-//						return analiseSintatica(new ArrayList<>(listaTokens.subList(index, listaTokens.size())), pilha, condicional, alfabeto);
 				}
 				
 				pilha.push(tokenLista);

@@ -1,5 +1,6 @@
 Program
-function int teste{
+int a;
+while(a <= 6){
 	int b;
 	int c;
 }
