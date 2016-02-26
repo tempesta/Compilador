@@ -1,20 +1,6 @@
 Program
-int i = 8;
-int a;
-{
-int b;
-{
-c
+if (a == b) {
+while (a != b) {
+a = b;
+} 
 }
-int d;
-}
-int abcd = 10;
-if(abcd <= 6){
-  abcd = abcd + 1;
-}
-float e;
-float z;
-char g;
-char l;
-void t;
-return abcd;

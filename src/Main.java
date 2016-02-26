@@ -47,7 +47,7 @@ public class Main {
 			//tokens formatados na mesma linha
 			linhasToken = funcao.agrupaTokensPorLinha(resultadoAnaliseLexica.tokens);
 
-//			sintax.analiseSintatica(resultadoAnaliseLexica.tokens, new Stack<MToken>(), false, resultadoAnaliseLexica.alfabeto);
+			sintax.analiseSintatica(resultadoAnaliseLexica.tokens, new Stack<MToken>(), false, resultadoAnaliseLexica.alfabeto);
 			
 			funcao.imprimeTokens(resultadoAnaliseLexica.tokens);
 			
@@ -58,6 +58,12 @@ public class Main {
 			
 			//acrescenta as declaracoes na tabela de simbolos
 			semantico.incrementaTabela(alfabeto, linhasToken);
+			
+			//realiza a verificacao de tipos
+			semantico.verificaTipo(alfabeto, linhasToken);
+			
+			TresEnderecos codigo = new TresEnderecos();
+			codigo.geraCodigo(linhasToken);
 			
 		} catch (Exception e) {
 			System.console().writer().println(e + "cannot open this file");
