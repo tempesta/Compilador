@@ -1,14 +1,2 @@
 Program
 int a = a + a + 1;
-{
-int b;
-{
-int c;
-}
-int d;
-}
-int abcd = 10;
-if(abcd <= 6){
-  abcd = abcd + 1;
-}
-return abcd;

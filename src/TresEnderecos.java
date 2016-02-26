@@ -1,6 +1,7 @@
 import java.beans.FeatureDescriptor;
 import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -175,6 +176,53 @@ public class TresEnderecos {
 	}
 
 	
+	/*public void teste(ArrayList<MToken> linha, HashMap<String, String> hashExpressao, String strExpressao)
+	{
+		int indexIgual, indexSoma, indexSubtracao, indexAbreParentese, indexMult, indexDivisao,indexFechaParentese;
+		
+		int contaNovaExpressao = 0;
+		
+		if(linha.indexOf("=") > 0)
+		{
+			teste(new ArrayList<MToken>(linha.subList(linha.indexOf("="), linha.size())), hashExpressao, strExpressao);
+		}		
+		if(linha.indexOf("+") > 0)
+		{
+			indexSoma = linha.indexOf("+");
+			if(hashExpressao.get(linha.get(indexSoma - 1).valor + "+" + linha.get(indexSoma + 1).valor) == null)
+			{
+				hashExpressao.put(linha.get(indexSoma - 1).valor + "+" + linha.get(indexSoma + 1).valor, "T_" + contaNovaExpressao);
+				contaNovaExpressao++;
+			}
+			strExpressao += "T_" + contaNovaExpressao;
+			teste(new ArrayList<MToken>(linha.subList(indexSoma + 1, linha.size())), hashExpressao, strExpressao);
+		}
+		if(linha.indexOf("-") > 0)
+		{
+			indexSubtracao = lista.indexOf("-");
+		}
+		if(linha.indexOf("*") > 0)
+		{
+			indexMult = lista.indexOf("*");
+		}
+		if(linha.indexOf("/") > 0)
+		{
+			indexDivisao = lista.indexOf("/");
+		}
+		if(linha.indexOf("(") > 0)
+		{
+			indexAbreParentese = lista.indexOf("(");
+			if(lista.indexOf(")") > 0)
+			{
+				indexFechaParentese = lista.indexOf(")");
+			}
+		}
+		
+		ArrayList<MToken> sublista = new ArrayList<MToken>(lista.subList(indexIgual + 1, lista.size()));
+		
+		teste(sublista, objTresEndereco, listaObjEndereco);
+	}*/
+	
 
 
 	private void constroiExpressao(ArrayList<MToken> value) {
@@ -199,7 +247,7 @@ public class TresEnderecos {
 				this.saidaCodigo.append("\t" + value.get(1).valor + " " + this.atribuicao + " " + value.get(3).valor +  " "  + value.get(4).valor + " " + value.get(5).valor + "\n");
 			} else if (value.size() > 7) {
 				//expressao que precisa ser refatorada
-				this.saidaCodigo.append(refatoraExpressao(value));				
+				//this.saidaCodigo.append(refatoraExpressao(value));				
 			} else if (value.size() == 5) {
 				//int a = b ou int a = 0
 				this.saidaCodigo.append("\t" + value.get(1).valor + " " + this.atribuicao + " " + value.get(3).valor + "\n");
