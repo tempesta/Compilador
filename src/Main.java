@@ -46,8 +46,19 @@ public class Main {
 			
 			//tokens formatados na mesma linha
 			linhasToken = funcao.agrupaTokensPorLinha(resultadoAnaliseLexica.tokens);
+			
+			//cria variavel que sera usada para identificar execucao de uma condicao
+//			boolean condicional = false;
+			
+			//cria variavel que sera usada para identificar a declaracao de parametro
+//			boolean parametro = false;
+			
+			//cria variavel para controle de inicio e fim de um bloco
+//			boolean bloco  = false;
 
-			sintax.analiseSintatica(resultadoAnaliseLexica.tokens, new Stack<MToken>(), false, resultadoAnaliseLexica.alfabeto);
+//			Stack<MToken> retornoSintax = new Stack<MToken>();
+			
+//			retornoSintax = sintax.analiseSintatica(resultadoAnaliseLexica.tokens, new Stack<MToken>(), condicional, parametro, bloco, resultadoAnaliseLexica.alfabeto);
 			
 			funcao.imprimeTokens(resultadoAnaliseLexica.tokens);
 			
