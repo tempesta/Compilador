@@ -11,20 +11,6 @@ public class AnalisadorSintatico {
 	private boolean verificaTokenIdentificador(MToken pilha, MToken token, Boolean condicional)
 	{
 		try {			
-			//verifica se o identificador esta dentro de uma condicao
-			/*if(condicional)
-			{
-				//verifica se a chave do ultimo token na pilha é um identificador
-				if(pilha.chave.equals("identificador"))
-				{
-					//caso seja um identificador e esteja dentro de um loop, qualquer operador relacional diferente de '=' é valido
-					if(!token.valor.equals("="))
-					{
-						return true;
-					}
-				}
-			}*/
-			
 			//caso a chave do ultimo elemento da pilha seja identificador
 			if(pilha.chave.equals("identificadores"))
 			{
@@ -299,7 +285,7 @@ public class AnalisadorSintatico {
 					{
 						return true;
 					}
-					if(token.valor.equals("char"))
+					if(token.chave.equals("char"))
 					{
 						return true;
 					}

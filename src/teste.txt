@@ -12,9 +12,4 @@ int abcd = 10;
 if(abcd <= 6){
   abcd = abcd + 1;
 }
-float e;
-float z;
-char g;
-char l;
-void t;
 return abcd;

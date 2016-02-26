@@ -90,13 +90,29 @@ public class AnalisadorLexico {
 			{
 				return new MToken("simbolo_inicial", codigos, linha);
 			}
-			
+						
 			return null;
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println("Erro ao verificar identificador ou palavra reservada " + e);
 			return null;
 		}
+	}
+	
+	//Funcao para verificar tipo caracter(char)
+	public boolean verificaChar(String codigos)
+	{
+		//cria a regex para sequencia de numeros inteiros
+        Pattern p = Pattern.compile("^'[a-zA-Z]'");
+        //verifica de acordo com a regex criada a string 'strCodigo'
+        Matcher m = p.matcher(codigos);
+        
+        if(m.matches())
+        {
+        	return true;
+        }
+        
+		return false;
 	}
 	
 	//Funcao para verificar abre parenteses 
@@ -609,6 +625,13 @@ public class AnalisadorLexico {
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
 				token = new MToken("float", substring, linha);
+			}
+			
+			//verifica valor tipo char(unico caracter entre aspas simples)
+			if(verificaChar(substring))
+			{
+				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
+				token = new MToken("char", substring, linha);
 			}
 			
 			//verifica sequencia de caracter, deve iniciar com letra para ser valido
