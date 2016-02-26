@@ -38,27 +38,39 @@ public class Main {
 			//executa a leitura do arquivo
 			codigos = funcao.leituraArquivo("teste.txt");
 			
+			ArrayList<String> teste = new ArrayList<String>(lex.removeComentario(codigos));
+			
+			//String a = lex.separar(teste.toString());
 			
 			//faz a analise lexica
-			resultadoAnaliseLexica = lex.analiseLexica(codigos, alfabeto);
+			resultadoAnaliseLexica = lex.analiseLexica(teste, alfabeto);
 			
-//			LinkedHashMap<Integer, ArrayList<MToken>> linhasToken = new LinkedHashMap<Integer, ArrayList<MToken>>();
+			LinkedHashMap<Integer, ArrayList<MToken>> linhasToken = new LinkedHashMap<Integer, ArrayList<MToken>>();
 			
 			//tokens formatados na mesma linha
-//			linhasToken = funcao.agrupaTokensPorLinha(resultadoAnaliseLexica.tokens);
+			linhasToken = funcao.agrupaTokensPorLinha(resultadoAnaliseLexica.tokens);
 			
 			//cria variavel que sera usada para identificar execucao de uma condicao
-//			boolean condicional = false;
+			boolean condicional = false;
 			
 			//cria variavel que sera usada para identificar a declaracao de parametro
-//			boolean parametro = false;
+			boolean parametro = false;
 			
 			//cria variavel para controle de inicio e fim de um bloco
-//			boolean bloco  = false;
+			boolean bloco  = false;
 
-//			Stack<MToken> retornoSintax = new Stack<MToken>();
+			Stack<MToken> retornoSintax = new Stack<MToken>();
 			
-//			retornoSintax = sintax.analiseSintatica(resultadoAnaliseLexica.tokens, new Stack<MToken>(), condicional, parametro, bloco, resultadoAnaliseLexica.alfabeto);
+			//se o primeiro token for diferente de simbolo inicial, imprime erro, e continua a execuao
+			if(!resultadoAnaliseLexica.tokens.get(0).chave.equals("simbolo_inicial"))
+			{
+				//relata erro de faltando simbolo inicial
+				System.out.println("Erro sintatico na linha: " + resultadoAnaliseLexica.tokens.get(0).linha + ". Faltando simbolo inicial 'Program'");
+			}
+			
+			retornoSintax = sintax.analiseSintatica(resultadoAnaliseLexica.tokens, new Stack<MToken>(), condicional, parametro, bloco, resultadoAnaliseLexica.alfabeto);
+			
+			funcao.imprimePilhaErro(retornoSintax);
 			
 			funcao.imprimeTokens(resultadoAnaliseLexica.tokens);
 			

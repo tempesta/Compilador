@@ -1,8 +1,10 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.nio.channels.Pipe;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Stack;
 
 public class Utils {
 	
@@ -30,28 +32,6 @@ public class Utils {
 		
 		linhasToken.put(aux, arrayToken);
 		
-//			if(arrayToken.isEmpty())
-//			{
-//				arrayToken.add(listaTokens.get(index));
-//			}
-//			else
-//			{
-//				if(listaTokens.get(index -1).linha == listaTokens.get(index).linha)
-//				{
-//					arrayToken.add(listaTokens.get(index));
-//				}
-//				else
-//				{
-//					linhasToken.put(arrayToken.get(index -1).linha, arrayToken);
-//					arrayToken.clear();
-//					arrayToken.add(listaTokens.get(index));
-//				}
-//			}
-			
-//			
-//			
-		
-		
 		return linhasToken;
 	}
 	
@@ -74,9 +54,14 @@ public class Utils {
 			//enquanto nao encontrar o fim do arquivo continua lendo e adicionando as linhas de codigo
 			while(linha != null)
 			{
-				//adicona as linhas de cogido ao array 'codigos'
-				codigos.add(linha);
+				//remove espaço e tabulacao do inicio e fim da linha
+				linha = linha.trim();
 				
+				if(!linha.isEmpty())
+				{
+					//adicona as linhas de cogido ao array 'codigos'
+					codigos.add(linha);
+				}
 				//le a proxima linhas
 				linha = reader.readLine();
 			}
@@ -91,6 +76,16 @@ public class Utils {
 			// TODO: handle exception
 			System.out.println("Erro ao tentar ler o arquivo " + nomeArquivo + ", " + e);
 			return null;
+		}
+	}
+
+	//Funcao criada para imprimir a pilha com erros da analise sinstatica
+	public void imprimePilhaErro(Stack<MToken> pilha)
+	{
+		while(!pilha.isEmpty())
+		{
+			System.out.println("Erro sintatico apos o token " + pilha.lastElement().valor + "  na linha: " + pilha.lastElement().linha);
+			pilha.pop();
 		}
 	}
 	

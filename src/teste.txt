@@ -1,8 +1,7 @@
 Program
-{
-int b;
-{
-int c;
+function int teste{
+	int b;
+	int c;
 }
 int d;
 }

@@ -351,6 +351,23 @@ public class AnalisadorLexico {
 		}
 	}
 	
+	//Funcao para verificar a o token 'funcao = function'
+	public boolean verificaFuncao(String codigos)
+	{
+		//cria a regex para sequencia de numeros flutuantes
+		Pattern p = Pattern.compile("^function");
+        //verifica de acordo com a regex criada a string 'strCodigo'
+        Matcher m = p.matcher(codigos);	
+
+        //caso o codigo(substring) seja igual a palavra funcao, retorna true
+        if(m.matches())
+        {
+        	return true;
+        }
+        
+        return false;
+	}
+	
 	//Funcao que verifica se o nome do identificador(variavel) ja foi declarada
 	public boolean verificaVariavelDeclarada(String codigo, HashMap<String, String> alfabeto)
 	{	
@@ -376,7 +393,7 @@ public class AnalisadorLexico {
 	}
 	
 	//Funcao recursiva que separa caracteres concatenados sem espaco. Usado no metodo separarCadeiaCarecter
-	private String separar(String subCadeias)
+	public String separar(String subCadeias)
 	{
 		try {
 			//string auxiliar
@@ -492,6 +509,10 @@ public class AnalisadorLexico {
 				//retorna array formatado, sem elementos vazios
 				return formataArrayComVazio(strSeparadoPorEspaco.split(" "));
 			}
+			else
+			{
+				strSeparadoPorEspaco += separar(strLinha);
+			}
 			
 			return strLinha.split(" ");
 		} catch (Exception e) {
@@ -512,7 +533,7 @@ public class AnalisadorLexico {
 			int j = 0;
 			
 			for (int i = 0; i < arCodigo.length; i++) {
-				if(!arCodigo[i].equals(""))
+				if(!arCodigo[i].trim().isEmpty())
 				{
 					//adiciona subCadeia no array arResposta na posicao 'j'. 
 					//Obs.:'j' so sera incrementado quando arCodigo[i] for diferente de vazio, assim eliminando possivel elementos 'nullssss'
@@ -537,6 +558,66 @@ public class AnalisadorLexico {
 		}
 	}
 	
+	//Funcao para remover comentario (/*comentario*/)
+	public ArrayList<String> removeComentario(ArrayList<String> blocoCodigo)
+	{
+		//encontra o index de inicio de comentario na string codigo
+		int indexInicioComentario = blocoCodigo.toString().indexOf("/*");
+		//encontra o index de fim de comentario na string codigo e soma 2, para que seja conseiderado o restante da strin apos o comentario
+		int indexFimComentario = blocoCodigo.toString().indexOf("*/") + 2;
+		
+		//caso nao tenha comentario no codigo(index = -1), returna o bloco de codigo
+		if(indexInicioComentario < 0)
+		{
+			return blocoCodigo;
+		}
+		
+		//caso o comentario tenha sido iniciado e nao tenha terminado, indica que o comentario vai ate o fim do codigo
+		//verifica < 2 pois é somado 2 no indexFimComentario a fim de que o simbolo '*/' nao faca parte do codigo
+		if(indexFimComentario < 2)
+		{
+			//atribui indexFimComentario ao final da string de codigo
+			indexFimComentario = blocoCodigo.toString().length();
+		}
+		
+		//exclui a string entre comentario
+		String strSemComentario = blocoCodigo.toString().substring(0, indexInicioComentario) + blocoCodigo.toString().substring(indexFimComentario, blocoCodigo.toString().length());
+		
+		//cria um array separado por ',' que indica onde a linha foi quebrada, e formata removendo elementos vazios
+		String[] arraySemComentarioEespaco = formataArrayComVazio(strSemComentario.split(","));
+		
+		//cria lista para recebeer a resposta separada por linha, como no arquivo original
+		ArrayList<String> resposta = new ArrayList<String>();
+		
+		//itera sobre o array formatado para transforma-lo novamente em uma lista separado pela linha do codigo no arquivo original
+		for (int i = 0; i < arraySemComentarioEespaco.length; i++)
+		{
+			//na primeira posicao, remove o caracter '[' gerado pelo metodo .split()
+			if(i == 0)
+			{
+				//remove '['
+				resposta.add(arraySemComentarioEespaco[i].replace("[", ""));
+			}
+			else
+			{
+				//na ultima posicao, remove o caracter ']' gerado pelo metodo .split()
+				if( i == arraySemComentarioEespaco.length-1)
+				{
+					//remove ']'
+					resposta.add(arraySemComentarioEespaco[i].replace("]", ""));
+				}
+				else
+				{
+					//adiciona linha de codigo
+					resposta.add(arraySemComentarioEespaco[i]);
+				}
+			}
+		}
+		
+		//retorna a lista de linhas de codigo sem comentario
+		return resposta;
+	}
+	
 	//Funcao que identifica o token a partir de uma string
 	public MToken identificaToken(String substring, int linha)
 	{
@@ -547,91 +628,98 @@ public class AnalisadorLexico {
 			if(verificaAbreParenteses(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("abre_parenteses", substring, linha);
+				return token = new MToken("abre_parenteses", substring, linha);
 			}
 			
 			//verifica fecha parentese
 			if(verificaFechaParenteses(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("fecha_parenteses", substring, linha);
+				return token = new MToken("fecha_parenteses", substring, linha);
 			}
 			
 			//verifica abre chaves
 			if(verificaAbreChaves(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("abre_chave", substring, linha);
+				return token = new MToken("abre_chave", substring, linha);
 			}
 			
 			//verifica fecha chaves
 			if(verificaFechaChaves(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("fecha_chave", substring, linha);
+				return token = new MToken("fecha_chave", substring, linha);
 			}
 			
 			//verifica abre colchetes
 			if(verificaFechaColchete(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("abre_colchete", substring, linha);
+				return token = new MToken("abre_colchete", substring, linha);
 			}
 			
 			//verifica fecha colchetes
 			if(verificaAbreColchete(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("fecha_colchete", substring, linha);
+				return token = new MToken("fecha_colchete", substring, linha);
 			}
 			
 			//verifica ponto e virgula
 			if(verificaPontoVirgula(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("ponto_virgula", substring, linha);
+				return token = new MToken("ponto_virgula", substring, linha);
 			}
 			
 			//verifica sinal de soma ou subtracao
 			if(verificaSinalSomaSubtracao(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("soma", substring, linha);
+				return token = new MToken("soma", substring, linha);
 			}
 			
 			//verifica sinal de multiplicacao ou divisao
 			if(verificaMultiplicacaoDivisao(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("mult", substring, linha);
+				return token = new MToken("mult", substring, linha);
 			}
 			
 			//verifica simbolos relacionais
 			if(verificaRecalional(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("relacional", substring, linha);
+				return token = new MToken("relacional", substring, linha);
 			}
 			
 			//verifica numeros inteiros
 			if(verificaNumerosInteiros(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("int", substring, linha);
+				return token = new MToken("int", substring, linha);
 			}
 			
 			//verifica numeros flutuantes
 			if(verificaNumerosFlutuantes(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("float", substring, linha);
+				return token = new MToken("float", substring, linha);
 			}
 			
 			//verifica valor tipo char(unico caracter entre aspas simples)
 			if(verificaChar(substring))
 			{
 				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
-				token = new MToken("char", substring, linha);
+				return token = new MToken("char", substring, linha);
+			}
+			
+			//verifica valor do tipo function, que indica uma funcao
+			if(verificaFuncao(substring))
+			{
+				//Instancia novo objeto Mtoken e adiciona a lista de tokens(chave, valor)
+				return token = new MToken("funcao", substring, linha);
 			}
 			
 			//verifica sequencia de caracter, deve iniciar com letra para ser valido
@@ -644,11 +732,11 @@ public class AnalisadorLexico {
 				if(tokenPalavra != null)
 				{
 					//adiciona token palavra reservada ou identificador
-					token = tokenPalavra;
+					return token = tokenPalavra;
 				}
 				else
 				{
-					token = new MToken("letra", substring, linha);
+					return token = new MToken("letra", substring, linha);
 				}
 				
 			}
@@ -689,24 +777,31 @@ public class AnalisadorLexico {
 				for (String substring : strLinhaComEspaco) 
 				{
 					tokenIndentificado = identificaToken(substring, contaLinha);
-					tokens.add(tokenIndentificado);
+					if(tokenIndentificado.chave != null)
+					{
+						tokens.add(tokenIndentificado);
 					
-					if(tokenIndentificado.chave.equals("letra"))
-					{					
-						//primeiro verifica se o ultimo token que foi adicionado na lista de tokens ï¿½ um identificador,
-						//o que diz se a proxima sequencia e nome de uma variavel
-						if(tokens.size() > 1 && tokens.get(tokens.size() - 2).chave.equals("identificadores"))
-						{
-							//verifica se a sequencia de caracter pode ser nome de uma variavel e se ja foi declarada
-							if(!verificaVariavelDeclarada(substring, alfabeto))
+						if(tokenIndentificado.chave.equals("letra"))
+						{					
+							//primeiro verifica se o ultimo token que foi adicionado na lista de tokens ï¿½ um identificador,
+							//o que diz se a proxima sequencia e nome de uma variavel
+							if(tokens.size() > 1 && tokens.get(tokens.size() - 2).chave.equals("identificadores"))
 							{
-								//caso nao tenha sido declarada ï¿½ adicionada ao alfabeto na chave variaveis_declaradas
-								alfabeto.put("variaveis_declaradas", alfabeto.get("variaveis_declaradas") + substring + ",");
+								//verifica se a sequencia de caracter pode ser nome de uma variavel e se ja foi declarada
+								if(!verificaVariavelDeclarada(substring, alfabeto))
+								{
+									//caso nao tenha sido declarada ï¿½ adicionada ao alfabeto na chave variaveis_declaradas
+									alfabeto.put("variaveis_declaradas", alfabeto.get("variaveis_declaradas") + substring + ",");
+								}
+								
+								//adiciona o token com chave = tipo do identificador e valor = substring
+								//tokens.add(new MToken(tokens.get(tokens.size() - 1).chave + " " + tokens.get(tokens.size() - 1).valor, substring));
 							}
-							
-							//adiciona o token com chave = tipo do identificador e valor = substring
-							//tokens.add(new MToken(tokens.get(tokens.size() - 1).chave + " " + tokens.get(tokens.size() - 1).valor, substring));
 						}
+					}
+					else
+					{
+						System.out.println("Token " + substring + " nao identificado");
 					}
 				}
 				//incrementa contador linha
