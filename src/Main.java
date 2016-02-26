@@ -42,33 +42,33 @@ public class Main {
 			//faz a analise lexica
 			resultadoAnaliseLexica = lex.analiseLexica(codigos, alfabeto);
 			
-			LinkedHashMap<Integer, ArrayList<MToken>> linhasToken = new LinkedHashMap<Integer, ArrayList<MToken>>();
+//			LinkedHashMap<Integer, ArrayList<MToken>> linhasToken = new LinkedHashMap<Integer, ArrayList<MToken>>();
 			
 			//tokens formatados na mesma linha
-			linhasToken = funcao.agrupaTokensPorLinha(resultadoAnaliseLexica.tokens);
+//			linhasToken = funcao.agrupaTokensPorLinha(resultadoAnaliseLexica.tokens);
 			
 			//cria variavel que sera usada para identificar execucao de uma condicao
-			boolean condicional = false;
+//			boolean condicional = false;
 			
 			//cria variavel que sera usada para identificar a declaracao de parametro
-			boolean parametro = false;
+//			boolean parametro = false;
 			
 			//cria variavel para controle de inicio e fim de um bloco
-			boolean bloco  = false;
+//			boolean bloco  = false;
 
-			Stack<MToken> retornoSintax = new Stack<MToken>();
+//			Stack<MToken> retornoSintax = new Stack<MToken>();
 			
-			retornoSintax = sintax.analiseSintatica(resultadoAnaliseLexica.tokens, new Stack<MToken>(), condicional, parametro, bloco, resultadoAnaliseLexica.alfabeto);
+//			retornoSintax = sintax.analiseSintatica(resultadoAnaliseLexica.tokens, new Stack<MToken>(), condicional, parametro, bloco, resultadoAnaliseLexica.alfabeto);
 			
 			funcao.imprimeTokens(resultadoAnaliseLexica.tokens);
 			
-			AnalisadorSemantico semantico = new AnalisadorSemantico();
+//			AnalisadorSemantico semantico = new AnalisadorSemantico();
 			
 			//vincula cada variavel ao seu escopo
-			semantico.constroiDeclaracaoBlocos(alfabeto, linhasToken);
+//			semantico.constroiDeclaracaoBlocos(alfabeto, linhasToken);
 			
 			//acrescenta as declaracoes na tabela de simbolos
-			semantico.incrementaTabela(alfabeto, linhasToken);
+//			semantico.incrementaTabela(alfabeto, linhasToken);
 			
 		} catch (Exception e) {
 			System.console().writer().println(e + "cannot open this file");
