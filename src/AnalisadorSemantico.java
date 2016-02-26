@@ -2,9 +2,12 @@ import java.lang.reflect.Array;
 import java.security.KeyStore.Entry;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 public class AnalisadorSemantico {
 
@@ -136,25 +139,148 @@ public class AnalisadorSemantico {
 					}					
 				}
 				
-			}
-			
-			
+			}		
 		}
 		
-		for (java.util.Map.Entry<String, String> entry : alfabeto.entrySet()) {
-			String key = entry.getKey();
-			String value = entry.getValue();
-			System.out.println(key + " = " + value);
-		}	
-		
+//		for (java.util.Map.Entry<String, String> entry : alfabeto.entrySet()) {
+//			String key = entry.getKey();
+//			String value = entry.getValue();
+//			System.out.println(key + " = " + value);
+//		}		
 		
 	}
 	
+	private String getTipoDeToken(final String variavel, HashMap<String, String> alfabeto) {
+		
+		String tipoToken = new String();
+		String variaveisPorTipo = alfabeto.get("int");
+		StringTokenizer tokenizer = new StringTokenizer(variaveisPorTipo,",");
+		
+		while (tokenizer.hasMoreTokens()) {
+			String token =  (String) tokenizer.nextElement();
+			if (token.equals(variavel)) {
+				tipoToken = "int";
+			}
+		}
+		
+		if (tipoToken.isEmpty()) {
+			variaveisPorTipo = alfabeto.get("float");
+			tokenizer = new StringTokenizer(variaveisPorTipo,",");
+			
+			while (tokenizer.hasMoreTokens()) {
+				String token =  (String) tokenizer.nextElement();
+				if (token.equals(variavel)) {
+					tipoToken = "float";
+				}
+			}
+		}
+		
+		if (tipoToken.isEmpty()) {
+			variaveisPorTipo = alfabeto.get("char");
+			tokenizer = new StringTokenizer(variaveisPorTipo,",");
+			
+			while (tokenizer.hasMoreTokens()) {
+				String token =  (String) tokenizer.nextElement();
+				if (token.equals(variavel)) {
+					tipoToken = "char";
+				}
+			}
+		}
+		
+		if (tipoToken.isEmpty()) {
+			variaveisPorTipo = alfabeto.get("void");
+			tokenizer = new StringTokenizer(variaveisPorTipo,",");
+			
+			while (tokenizer.hasMoreTokens()) {
+				String token =  (String) tokenizer.nextElement();
+				if (token.equals(variavel)) {
+					tipoToken = "void";
+				}
+			}
+		}	
+		
+		return tipoToken;
+	}
 	
+	private String getEscopoVariavel(String valor) {
+		String escopo = new String();
+		
+		for (java.util.Map.Entry<String, String> entry : this.declaracoesBloco.entrySet()) {
+			String chave = entry.getKey();
+			String variaveis = entry.getValue();
+			StringTokenizer tokenizer = new StringTokenizer(variaveis, ",");
+			while (tokenizer.hasMoreTokens()) {
+				String object = (String) tokenizer.nextElement();
+				if (object.equals(valor)) {
+					escopo = chave;
+				}
+			}
+		}		
+		return escopo;
+	}
 	
-	
-	
-	
-	
-	
+	public void verificaTipo(final HashMap<String, String> alfabeto, LinkedHashMap<Integer, ArrayList<MToken>> linhasToken) {
+		
+		Set<String> variaveis = new HashSet<String>();
+		
+		for (java.util.Map.Entry<Integer, ArrayList<MToken>> entry : linhasToken.entrySet()) {
+			ArrayList<MToken> linha = new ArrayList<MToken>(entry.getValue());
+			
+			for (int i = 0; i < linha.size(); i++) {
+				
+				if (linha.get(i).valor.equals("int") || linha.get(i).valor.equals("float") || linha.get(i).valor.equals("char") || linha.get(i).valor.equals("void")) {
+					MToken variavel = linha.get(i + 1);
+					if (!variaveis.contains(variavel.valor)) {
+						variaveis.add(variavel.valor);
+					}
+				}
+					
+				if (linha.get(i).valor.equals("=") || linha.get(i).valor.equals("==") || linha.get(i).valor.equals(">=") || linha.get(i).valor.equals("<=") || linha.get(i).valor.equals("!=") ||
+						linha.get(i).valor.equals("<") || linha.get(i).valor.equals(">") || linha.get(i).valor.equals("+") || linha.get(i).valor.equals("-") || linha.get(i).valor.equals("*")
+						|| linha.get(i).valor.equals("/")) {
+					
+					MToken tokenAnterior = new MToken(linha.get(i - 1));
+					MToken tokenPosterior = new MToken(linha.get(i + 1));
+					
+					String tipoTokenAnterior = new String(getTipoDeToken(tokenAnterior.valor, alfabeto));
+					String escopoPrimeiraVariavel = new String(getEscopoVariavel(tokenAnterior.valor));
+					
+					if (tokenPosterior.chave.equals("int") || tokenPosterior.chave.equals("float") || tokenPosterior.chave.equals("char")) {
+						//relacao de variaveis com numeros
+						if (!variaveis.contains(tokenAnterior.valor)) {
+							//lanca excecao para variavel nao declarada
+							System.out.println("Erro Semantico na linha " + tokenAnterior.linha + ": Variavel '" + tokenAnterior.valor + "' nao declarada!");
+						} else if (!tipoTokenAnterior.equals(tokenPosterior.chave)) {
+							//lanca excecao, operacoes entre tipos incompativeis
+							System.out.println("Erro Semantico na linha " + tokenAnterior.linha + ": Tipos incompativeis entre '" + tokenAnterior.valor + "' e " + tokenPosterior.valor + "!");
+						} 						
+					} else {
+						//relacao de variaveis com variaveis
+						String tipoTokenPosterior = new String(getTipoDeToken(tokenAnterior.valor, alfabeto));
+						String escopoSegundaVariavel = new String(getEscopoVariavel(tokenPosterior.valor));
+						
+						if (!variaveis.contains(tokenAnterior.valor)) {
+							//lanca excecao para variavel nao declarada
+							System.out.println("Erro Semantico na linha " + tokenAnterior.linha + ": Variavel '" + tokenAnterior.valor + "' nao declarada!");
+						} else if (!variaveis.contains(tokenPosterior.valor)) {
+							//lanca excecao para variavel nao declarada
+							System.out.println("Erro Semantico na linha " + tokenPosterior.linha + ": Variavel '" + tokenPosterior.valor + "' nao declarada!");
+						}
+						
+						if (!escopoPrimeiraVariavel.equals(escopoSegundaVariavel)) {
+							System.out.println("Erro Semantico na linha " + tokenAnterior.linha + ": As variaveis '" +tokenAnterior.valor + "' e '" + tokenPosterior.valor + "' nao pertencem ao mesmo escopo!");
+						} else {
+							if (!tipoTokenAnterior.equals(tipoTokenPosterior)) {
+								System.out.println("Erro Semantico na linha " + tokenAnterior.linha + ": Tipos incompativeis entre " + tokenAnterior.valor + " e " + tokenPosterior.valor + "!");
+							}
+						}						
+					}					
+				}				
+			}
+		
+		}
+		
+	}
+
+		
 }

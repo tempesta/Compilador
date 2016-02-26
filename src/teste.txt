@@ -1,4 +1,5 @@
 Program
+int a = a + a + 1;
 int a;
 while(a <= 6){
 	int b;
