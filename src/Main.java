@@ -1,8 +1,11 @@
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 //import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Stack;
+
+import org.omg.CORBA.portable.OutputStream;
 
 public class Main {
 
@@ -36,7 +39,7 @@ public class Main {
 			ArrayList<String> codigos = new ArrayList<>();
 			
 			//executa a leitura do arquivo
-			codigos = funcao.leituraArquivo("teste.txt");
+			codigos = funcao.leituraArquivo(args[0]);
 			
 			ArrayList<String> teste = new ArrayList<String>(lex.removeComentario(codigos));
 			
@@ -72,8 +75,6 @@ public class Main {
 			
 			funcao.imprimePilhaErro(retornoSintax);
 			
-			funcao.imprimeTokens(resultadoAnaliseLexica.tokens);
-			
 			AnalisadorSemantico semantico = new AnalisadorSemantico();
 			
 			//vincula cada variavel ao seu escopo
@@ -85,8 +86,15 @@ public class Main {
 			//realiza a verificacao de tipos
 			semantico.verificaTipo(alfabeto, linhasToken);
 			
-			TresEnderecos codigo = new TresEnderecos();
-			codigo.geraCodigo(linhasToken);
+			//funcao.imprimeTokens(resultadoAnaliseLexica.tokens);
+			if (retornoSintax.isEmpty()) {		
+				
+				//Cria codigo de tres enderecos
+				TresEnderecos codigo = new TresEnderecos();
+				codigo.geraCodigo(linhasToken);
+				System.out.println("Codigo de tres enderecos: ");
+				System.out.println(codigo.getSaidaCodigo());
+			}		
 			
 		} catch (Exception e) {
 			System.console().writer().println(e + "cannot open this file");

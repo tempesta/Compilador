@@ -43,7 +43,7 @@ public class Utils {
 		
 		try {
 			//cria um buffer de leitura a partir do diretorio corrente da aplicacao + o nome do arquivo
-			BufferedReader reader = new BufferedReader(new FileReader(path + "/src/" + nomeArquivo));
+			BufferedReader reader = new BufferedReader(new FileReader(path + "/testes/" + nomeArquivo));
 			
 			//inicializa o array com as linhas de codigo a serem retornados
 			ArrayList<String> codigos = new ArrayList<>();
@@ -54,7 +54,7 @@ public class Utils {
 			//enquanto nao encontrar o fim do arquivo continua lendo e adicionando as linhas de codigo
 			while(linha != null)
 			{
-				//remove espaço e tabulacao do inicio e fim da linha
+				//remove espaï¿½o e tabulacao do inicio e fim da linha
 				linha = linha.trim();
 				
 				if(!linha.isEmpty())

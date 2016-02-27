@@ -1,0 +1,1 @@
+Erro ao tentar ler o arquivo teste1.txt, java.io.FileNotFoundException: /home/juventino/workspace/Trabalho_Compiladores/Compilador/src/src/testes/teste1.txt (Arquivo ou diretório não encontrado)

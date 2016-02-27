@@ -6,17 +6,19 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Stack;
-
+/*
+ * Classe que transforma a saida do analisador semantico em codigo de tres enderecos
+ */
 
 public class TresEnderecos {
 
-	private String labelRepeticao, labelRepeticaoOut, labelCondicional;
-	private String ifLabel, elseLabel, atribuicao;
-	private int contadorRepeticao, contadorCondicional, contadorTemporarios;
-	private StringBuilder saidaCodigo;
-	private Stack<String> pilhaFechaChaves;
+	private String labelRepeticao, labelRepeticaoOut, labelCondicional; //atributos que controlam os labels para identificar os rotulos
+	private String ifLabel, elseLabel, atribuicao; // labels para identificacao de rotulos
+	private int contadorRepeticao, contadorCondicional, contadorTemporarios; //contadores de cada label
+	private StringBuilder saidaCodigo; // codigo de tres enderecos
+	private Stack<String> pilhaFechaChaves; //pilha que auxilia no processo de equivalencia entre as chaves para abrir e fechar blocos
 	
-	
+	//construtor padrao: inicia os valores nos respectivos atributos
 	public TresEnderecos() {
 		super();
 		this.atribuicao = new String(":=");
@@ -32,222 +34,152 @@ public class TresEnderecos {
 		this.pilhaFechaChaves = new Stack<String>();
 	}
 	
+	//metodo acessor: retorna o codigo de tres enderecos
 	public StringBuilder getSaidaCodigo() {
 		return saidaCodigo;
 	}
 	
+	//metodo acessor: retorna o label de repeticao
 	public String getLabelRepeticao() {
 		return labelRepeticao;
 	}
 
-
+	//metodo acessor: retorna o label condicional
 	public String getLabelCondicional() {
 		return labelCondicional;
 	}
 
-
+	//metodo acessor: retorna if para auxiliar na construcao dos codigos
 	public String getIfLabel() {
 		return ifLabel;
 	}
 
-
+	//metodo acessor: retorna else para auxiliar na construcao dos codigos
 	public String getElseLabel() {
 		return elseLabel;
 	}
 
-
+	//retorna simbolo :=
 	public String getAtribuicao() {
 		return atribuicao;
 	}
 
-
+	// retorna o contador que representa a proxima iteracao
 	public int getContadorRepetica() {
 		return contadorRepeticao;
 	}
 
-
+	//altera valor para contador de repeticoes (iteracoes)
 	public void setContadorRepetica(int contadorRepetica) {
 		this.contadorRepeticao = contadorRepetica;
 	}
 
-
+	//retorna valor para contador condicional
 	public int getContadorCondicional() {
 		return contadorCondicional;
 	}
 
-
+	//seta valor no atributo contador inicial
 	public void setContadorCondicional(int contadorCondicional) {
 		this.contadorCondicional = contadorCondicional;
 	}
 
-
+	//retorna valor do contador temporario
 	public int getContadorTemporarios() {
 		return contadorTemporarios;
 	}
 
-
+	//seta valor no atributo contador de temporarios
 	public void setContadorTemporarios(int contadorTemporarios) {
 		this.contadorTemporarios = contadorTemporarios;
 	}
 
-
+	//seta valor no atributo labelRepeticao
 	public void setLabelRepeticao(String labelRepeticao) {
 		this.labelRepeticao = labelRepeticao;
 	}
 
-
+	//seta valor no atributo labelCondicional
 	public void setLabelCondicional(String labelCondicional) {
 		this.labelCondicional = labelCondicional;
 	}
 
-
+	//seta valor no label if
 	public void setIfLabel(String ifLabel) {
 		this.ifLabel = ifLabel;
 	}
 
-
+	//seta valor no label else
 	public void setElseLabel(String elseLabel) {
 		this.elseLabel = elseLabel;
 	}
 	
-	
+	/*
+	 * Metodo que gera o codigo de tres enderecos
+	 */
 	public void geraCodigo(final LinkedHashMap<Integer, ArrayList<MToken>> linhasToken) {
 		
+		//percorre todos os tokens
 		for (Entry<Integer, ArrayList<MToken>> entry : linhasToken.entrySet()) {
 			
 			ArrayList<MToken> value = entry.getValue();
 			boolean flag = false;
-
 			
 			for (int i = 0; i < value.size() && !flag; i++) {
 				
 				MToken token = new MToken(value.get(i));
-				System.out.println(token.valor);
-				
-				//declaracao ou declaracao seguida de expressao				
+					
+					//identifica as peculiaredades de cada trecho de codigo para criar o codigo de tres enderecos
+					//declaracao ou declaracao seguida de expressao				
 					if (token.valor.equals("int") || token.valor.equals("float") || token.valor.equals("void") || token.valor.equals("char")) {
 						constroiExpressao(value);
 						flag = true;
-					} else if (token.chave.equals("letra")) {
+					} else if (token.chave.equals("letra")) { //variavel
 						constroiExpressao(value);
 						flag = true;
-					} else if (token.chave.equals("palavras_reservadas") && token.valor.equals("if")) {
+					} else if (token.chave.equals("palavras_reservadas") && token.valor.equals("if")) { //condicional
 						flag = true;
-						pilhaFechaChaves.push(labelCondicional + contadorCondicional); 
-						contadorCondicional++;
-						constroiExpressao(value);
-					} else if (token.chave.equals("palavras_reservadas") && token.valor.equals("while")) {
+						pilhaFechaChaves.push(labelCondicional + contadorCondicional); //empilha o fecha chaves para o comando condicional
+						contadorCondicional++; //incrementa contador de comandos condicionais
+						constroiExpressao(value);//constroi expressao equivalente
+					} else if (token.chave.equals("palavras_reservadas") && token.valor.equals("while")) { //while
 						flag = true;
-						pilhaFechaChaves.push(labelRepeticaoOut + contadorRepeticao); 
-						constroiExpressao(value);
-					} else if (token.valor.equals("}")) {
-						if (pilhaFechaChaves.lastElement().contains("W")) {
-							this.saidaCodigo.append("\tGOTO _W" + pilhaFechaChaves.lastElement().substring(5) + "\n");
+						pilhaFechaChaves.push(labelRepeticaoOut + contadorRepeticao); //empilha o fecha chaves para o comando de iteracao
+						constroiExpressao(value); //constroi expressao para while
+					} else if (token.valor.equals("}")) { //identifica fecha chaves
+						if (pilhaFechaChaves.lastElement().contains("W")) {//verifica se o topo da pilha de labes eh referente ao while
+							this.saidaCodigo.append("\tGOTO _W" + pilhaFechaChaves.lastElement().substring(5) + "\n");//acrescenta topo da pilha (fecha chaves do while) ao codigo de tres enderecos
 						} 
-						this.saidaCodigo.append(pilhaFechaChaves.pop() + ":\n");
+						this.saidaCodigo.append(pilhaFechaChaves.pop() + ":\n"); //acrescenta label ao codigo de tres enderecos
 						
 					}
 			}		
 		}			
 	}
 	
-	/**
-	 * refatora a expressao
-	 * @param value
-	 * @return
+
+	/*
+	 * Metodo responsavel por converter as expressoes do codigo fonte para o codigo de tres enderecos
 	 */
-	private String refatoraExpressao(final ArrayList<MToken> value) {
-		String expressao = new String();
-		int contadorTemporarios = 1;
-		boolean precedencia = false;
-		boolean igualdade = false;
-		//verifica se existe precedencia nos operadores
-		for (int i = 0; i < value.size() && !precedencia; i++) {
-			if (value.get(i).valor.equals("*") || value.get(i).valor.equals("'/") || value.get(i).valor.equals("(") || value.get(i).valor.equals(")")) {
-				precedencia = true;
-			}
-		}
-		
-		//nao ha precedencia, refatoracao simples
-		
-		
-		
-		return null;
-	}
-
-	
-	/*public void teste(ArrayList<MToken> linha, HashMap<String, String> hashExpressao, String strExpressao)
-	{
-		int indexIgual, indexSoma, indexSubtracao, indexAbreParentese, indexMult, indexDivisao,indexFechaParentese;
-		
-		int contaNovaExpressao = 0;
-		
-		if(linha.indexOf("=") > 0)
-		{
-			teste(new ArrayList<MToken>(linha.subList(linha.indexOf("="), linha.size())), hashExpressao, strExpressao);
-		}		
-		if(linha.indexOf("+") > 0)
-		{
-			indexSoma = linha.indexOf("+");
-			if(hashExpressao.get(linha.get(indexSoma - 1).valor + "+" + linha.get(indexSoma + 1).valor) == null)
-			{
-				hashExpressao.put(linha.get(indexSoma - 1).valor + "+" + linha.get(indexSoma + 1).valor, "T_" + contaNovaExpressao);
-				contaNovaExpressao++;
-			}
-			strExpressao += "T_" + contaNovaExpressao;
-			teste(new ArrayList<MToken>(linha.subList(indexSoma + 1, linha.size())), hashExpressao, strExpressao);
-		}
-		if(linha.indexOf("-") > 0)
-		{
-			indexSubtracao = lista.indexOf("-");
-		}
-		if(linha.indexOf("*") > 0)
-		{
-			indexMult = lista.indexOf("*");
-		}
-		if(linha.indexOf("/") > 0)
-		{
-			indexDivisao = lista.indexOf("/");
-		}
-		if(linha.indexOf("(") > 0)
-		{
-			indexAbreParentese = lista.indexOf("(");
-			if(lista.indexOf(")") > 0)
-			{
-				indexFechaParentese = lista.indexOf(")");
-			}
-		}
-		
-		ArrayList<MToken> sublista = new ArrayList<MToken>(lista.subList(indexIgual + 1, lista.size()));
-		
-		teste(sublista, objTresEndereco, listaObjEndereco);
-	}*/
-	
-
-
 	private void constroiExpressao(ArrayList<MToken> value) {
 	
-		//declaracao comum
+		//declaracao comum, to tipo int a;
 		if (value.size() == 3) {
 			if (value.get(0).valor.equals("int")) {
-				this.saidaCodigo.append("\t" + value.get(1).valor + " " + this.atribuicao + " 0\n");
+				this.saidaCodigo.append("\t" + value.get(1).valor + " " + this.atribuicao + " 0\n"); // lida com declaracoes do tipo int a = 0;
 			} else if (value.get(0).valor.equals("float")) {
-				this.saidaCodigo.append("\t" + value.get(1).valor + " " + this.atribuicao + " 0.0\n");
+				this.saidaCodigo.append("\t" + value.get(1).valor + " " + this.atribuicao + " 0.0\n"); //lida com declaracoes do tipo float a = 0.0;
 			} else if (value.get(0).valor.equals("char")) {
-				this.saidaCodigo.append("\t" + value.get(1).valor + " " +this.atribuicao + " \''\n");
+				this.saidaCodigo.append("\t" + value.get(1).valor + " " +this.atribuicao + " \''\n");//lida com declaracoes do tipo char a = ''
 			}			
-			System.out.println(this.saidaCodigo);
 		}
 		
-		//expressao
+		//expressao de soma, divisao, subtracao e multiplicacao
 		if (value.get(0).chave.equals("identificadores")) {
 			//verifica tamanho da expressao
 			if (value.size() == 7) {
 				//expressao da forma int x = y + z;
-				this.saidaCodigo.append("\t" + value.get(1).valor + " " + this.atribuicao + " " + value.get(3).valor +  " "  + value.get(4).valor + " " + value.get(5).valor + "\n");
-			} else if (value.size() > 7) {
-				//expressao que precisa ser refatorada
-				//this.saidaCodigo.append(refatoraExpressao(value));				
+				this.saidaCodigo.append("\t" + value.get(1).valor + " " + this.atribuicao + " " + value.get(3).valor +  " "  + value.get(4).valor + " " + value.get(5).valor + "\n");	
 			} else if (value.size() == 5) {
 				//int a = b ou int a = 0
 				this.saidaCodigo.append("\t" + value.get(1).valor + " " + this.atribuicao + " " + value.get(3).valor + "\n");
@@ -262,29 +194,14 @@ public class TresEnderecos {
 			} 
 		} else if (value.get(0).chave.equals("palavras_reservadas") && value.get(0).valor.equals("if")) {
 			//gera codigo para if
-			this.saidaCodigo.append("\tifnot " +value.get(2).valor + " " + value.get(3).valor + " " + value.get(4).valor + " GOTO " + pilhaFechaChaves.lastElement() + "\n");
+			this.saidaCodigo.append("\tifnot " +value.get(2).valor + " " + value.get(3).valor + " " + value.get(4).valor + " GOTO " + pilhaFechaChaves.lastElement() + "\n"); //insere if no codigo de tres enderecos
 		} else if (value.get(0).chave.equals("palavras_reservadas") && value.get(0).valor.equals("while")) {
 			//gera codigo para while
 			this.saidaCodigo.append(labelRepeticao + contadorRepeticao + ":\n");
-			this.saidaCodigo.append("\tifnot " +value.get(2).valor + " " + value.get(3).valor + " " + value.get(4).valor + " GOTO " + pilhaFechaChaves.lastElement() + "\n");
+			this.saidaCodigo.append("\tifnot " +value.get(2).valor + " " + value.get(3).valor + " " + value.get(4).valor + " GOTO " + pilhaFechaChaves.lastElement() + "\n"); //insere while no codigo de tres enderecos
 			contadorRepeticao++;
 		}
 		
-		System.out.print(this.saidaCodigo);
-		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }

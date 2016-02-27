@@ -573,7 +573,7 @@ public class AnalisadorLexico {
 		}
 		
 		//caso o comentario tenha sido iniciado e nao tenha terminado, indica que o comentario vai ate o fim do codigo
-		//verifica < 2 pois é somado 2 no indexFimComentario a fim de que o simbolo '*/' nao faca parte do codigo
+		//verifica < 2 pois eh somado 2 no indexFimComentario a fim de que o simbolo '*/' nao faca parte do codigo
 		if(indexFimComentario < 2)
 		{
 			//atribui indexFimComentario ao final da string de codigo

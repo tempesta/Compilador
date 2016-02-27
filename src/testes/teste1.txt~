@@ -1,0 +1,7 @@
+Program 
+asdfasdfasdf{ };
+int a = 2;
+int b = 2;
+int result;
+result = a + b;
+return result;

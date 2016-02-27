@@ -14,7 +14,7 @@ public class AnalisadorSintatico {
 			//caso a chave do ultimo elemento da pilha seja identificador
 			if(pilha.chave.equals("identificadores"))
 			{
-				//verifica se a chave do token da posicao atual é nome de uma variavel(nao inicia com digito e nao contem caracter especial)
+				//verifica se a chave do token da posicao atual ï¿½ nome de uma variavel(nao inicia com digito e nao contem caracter especial)
 				if(token.chave.equals("letra"))
 				{
 					//caso seja(identificador reconhecido), desempilha identificador
@@ -478,16 +478,20 @@ public class AnalisadorSintatico {
 	private boolean verificaTokenSomaSubMultDiv(MToken pilha, MToken token)
 	{
 		try {
+			//caso ultimo elemento da pilha for multiplicacao, soma, divisao e subtracao verifica se o token atual da lista eh um numero ou uma variavel, se sim, retorna true 
 			switch (pilha.chave) 
 			{
 				case "soma":
 				case "mult":
 					if(token.chave.equals("int"))
 					{
-						return true;
+						return true; 
 					}
 					if(token.chave.equals("float"))
 					{
+						return true;
+					}
+					if(token.chave.equals("letra")) {
 						return true;
 					}
 					//Em caso de erro(caso nao encontre o proximo token compativel) imprime na tela uma mensagem de erro e faz referencia a linha onde ocorreu
@@ -732,26 +736,6 @@ public class AnalisadorSintatico {
 						return analiseSintatica(sublista, pilha, condicional, parametro, bloco, alfabeto);
 					}	
 					
-					/*//desempilha a palavra reservada, pois o proximo token corresponde
-					pilha.pop();
-					
-					//se depois do if for '('
-					if(tokenLista.valor.equals("("))
-					{
-						//adiciona '(' na pilha
-						pilha.push(tokenLista);
-					}
-						
-					//le o proximo elemento depois do '('
-					index++;
-
-					//cria uma sublita a partir do index atual, a frente do elemento '('
-					ArrayList<MToken> subLista = new ArrayList<>(listaTokens.subList(index, listaTokens.size()));
-					
-					//indica para a funcao que os proximos tokens estao dentro de uma condicao
-					condicional = true;
-					
-					return analiseSintatica(subLista, pilha, condicional, alfabeto);*/
 				}
 				
 				//caso o ultimo elemento da pilha tenha chave = 'else' ou 'struct', chama funcao que verifica se o atual elemento da lista de tokens e = '{', se sim chama funcao novamente
@@ -776,9 +760,6 @@ public class AnalisadorSintatico {
 						return analiseSintatica(sublista, pilha, condicional, parametro, bloco, alfabeto);
 					}	
 					
-//						ArrayList<MToken> subLista = new ArrayList<>(listaTokens.subList(index, listaTokens.size()));
-//						
-//						return analiseSintatica(subLista, pilha, condicional, alfabeto);
 				}
 				
 				//caso o ultimo elemento da pilha tenha chave = 'void', chama a funcao que verifica se o atual elemento da lista de tokens e = '(', se sim, chama funcao analiseSintataica novamente
@@ -807,13 +788,6 @@ public class AnalisadorSintatico {
 						return analiseSintatica(sublista, pilha, condicional, parametro, bloco, alfabeto);
 					}	
 					
-//						//cria sublista de tokens a partir do index atual ate o fim da lista
-//						ArrayList<MToken> subLista = new ArrayList<>(listaTokens.subList(index, listaTokens.size()));
-//						
-//						//indica que entrou em uma condicao, ou declaracao de parametros
-//						condicional = true;
-//						
-//						return analiseSintatica(subLista, pilha, condicional, alfabeto);
 				}
 				
 				//caso o ultimo elemento da pilha tenha chave = 'return', chama funcao que verifica se o atual elemento da lista de tokens e = variavel ou valor
